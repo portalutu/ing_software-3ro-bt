@@ -1,6 +1,14 @@
 # Ingeniería de Software - 3º Año EMT (2026)
 
-Repositorio de materiales y plantillas para la materia.
+Repositorio de apoyo para la materia, con plantillas y documentos de referencia para planificar, documentar y presentar proyectos de software.
+
+## Objetivo
+
+Centralizar en un solo lugar:
+
+- artefactos de gestión de proyecto;
+- guías de trabajo para el curso;
+- plantillas listas para completar durante el año.
 
 ## Estructura del repositorio
 
@@ -9,8 +17,10 @@ Repositorio de materiales y plantillas para la materia.
 ├── Project_Management_Templates_full.md
 ├── README.md
 ├── documentos
+│   ├── agile.md
 │   ├── manual_estilo_markdown.md
-│   └── manual_git_v2.md
+│   ├── manual_git_v2.md
+│   └── waterfall.md
 └── templates
     ├── 01_project_charter.md
     ├── 02_stakeholders.md
@@ -27,9 +37,19 @@ Repositorio de materiales y plantillas para la materia.
     └── 13_final_report.md
 ```
 
-## Contenido
+## Contenido principal
 
-- `Project_Management_Templates_full.md`: documento fuente con el kit completo de templates de gestión de proyecto.
-- `documentos/manual_estilo_markdown.md`: guía de estilo para redactar documentos en markdown.
-- `documentos/manual_git_v2.md`: guía de uso de Git para el curso.
-- `templates/`: plantillas separadas por artefacto, listas para usar en proyectos.
+- `Project_Management_Templates_full.md`: compendio completo con templates y ejemplos.
+- `templates/`: versiones separadas de cada artefacto para usar en el proyecto.
+- `documentos/manual_estilo_markdown.md`: pautas para redactar entregables en Markdown.
+- `documentos/manual_git_v2.md`: guía práctica de Git para el curso.
+- `documentos/agile.md`: introducción a metodologías ágiles.
+- `documentos/waterfall.md`: introducción al enfoque tradicional en cascada.
+
+## Uso recomendado
+
+1. Definir alcance y actores con `01_project_charter.md`, `02_stakeholders.md` y `03_scope.md`.
+2. Planificar trabajo con `04_wbs.md`, `05_schedule.md`, `06_risk_register.md` y `07_communication_plan.md`.
+3. Documentar producto con `08_requirements.md`, `11_architecture.md` y `12_test_plan.md`.
+4. Gestionar iteraciones con `09_backlog.md` y `10_sprint_plan.md`.
+5. Cerrar proyecto con `13_final_report.md`.
