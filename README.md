@@ -53,3 +53,6 @@ Centralizar en un solo lugar:
 3. Documentar producto con `08_requirements.md`, `11_architecture.md` y `12_test_plan.md`.
 4. Gestionar iteraciones con `09_backlog.md` y `10_sprint_plan.md`.
 5. Cerrar proyecto con `13_final_report.md`.
+
+### Otros enlaces
+Tríángulo de hierro: https://concord-cc.com/blog/the-iron-triangle/
