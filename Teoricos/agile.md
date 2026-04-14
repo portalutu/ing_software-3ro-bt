@@ -310,11 +310,9 @@ Proyecto: Sistema de biblioteca escolar
 
 Historias de usuario:
 
-US1 Registrar libros
-
-US2 Registrar usuarios
-
-US3 Registrar préstamos
+* US1 Registrar libros
+* US2 Registrar usuarios
+* US3 Registrar préstamos
 
 Sprint 1
 
