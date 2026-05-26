@@ -4,7 +4,7 @@
 
 ## 1. Situación inicial del cliente
 
-**Nombre del establecimiento:** Estancia "Mucha Teta"
+**Nombre del establecimiento:** Estancia "MuchaTeta"
 
 **Cliente:** Sr. Antonio Romualdo Rogelio Roldán (arrr)\
 **Rubro:** Producción lechera\
