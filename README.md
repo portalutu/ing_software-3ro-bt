@@ -25,7 +25,10 @@ Este repositorio reúne en un solo lugar:
 │   ├── user-stories.md
 │   ├── backlog.md
 │   ├── sprint-planning.md
-│   └── scrum-events.md
+│   ├── scrum-events.md
+│   └── ADA.md
+├── ADA/
+│   └── analisis.md
 ├── Practicos/
 │   ├── juego_roles_relevamiento_requerimientos_3_emt.md
 │   └── proyecto_scrum_trazabilidad_lechera.md
@@ -64,6 +67,13 @@ Material conceptual y didáctico para trabajar los temas principales de la mater
 - [backlog.md](Teoricos/backlog.md): transformación de requerimientos en historias y backlog.
 - [sprint-planning.md](Teoricos/sprint-planning.md): planificación de sprint con ejemplo aplicado.
 - [scrum-events.md](Teoricos/scrum-events.md): eventos principales de Scrum y su propósito.
+- [ADA.md](Teoricos/ADA.md): documento teórico completo sobre especificación de requerimientos (IEEE 830, tipos, ciclo de vida, usuarios, stakeholders, técnicas de relevamiento, factibilidades, lógica del sistema) y modelado de sistemas con UML (modelo esencial, diagramas de casos de uso, clases, secuencia, actividad y navegabilidad).
+
+### `ADA/`
+
+Documentos de análisis aplicado que toman el proyecto TamboTrace como caso de estudio.
+
+- [analisis.md](ADA/analisis.md): análisis de requerimientos completo del sistema TamboTrace (trazabilidad de producción lechera). Aplica directamente sobre un proyecto real cada concepto teórico de `Teoricos/ADA.md`: requerimientos funcionales y no funcionales, ciclo de vida, usuarios, stakeholders, técnicas de relevamiento, factibilidades y lógica del sistema con árboles y tablas de decisión.
 
 ### `Practicos/`
 
@@ -105,20 +115,24 @@ Un recorrido posible para usar este repositorio durante el curso es:
 
 1. Leer los conceptos generales en `Teoricos/`.
 2. Entender cómo entrevistar al cliente en [entrevistas.md](Teoricos/entrevistas.md).
-3. Practicar el relevamiento con el juego de roles de `Practicos/`.
-4. Convertir necesidades en historias de usuario con [user-stories.md](Teoricos/user-stories.md).
-5. Armar y priorizar el producto con [backlog.md](Teoricos/backlog.md).
-6. Planificar una iteración con [sprint-planning.md](Teoricos/sprint-planning.md).
-7. Usar las plantillas de `Templates/` para documentar el proyecto real.
-8. Consultar `Documentos/` cuando se necesiten guías de escritura, Markdown o Git.
+3. Estudiar la especificación de requerimientos y el modelado de sistemas en [ADA.md](Teoricos/ADA.md).
+4. Ver cómo se aplica todo eso en un proyecto real leyendo [ADA/analisis.md](ADA/analisis.md).
+5. Practicar el relevamiento con el juego de roles de `Practicos/`.
+6. Convertir necesidades en historias de usuario con [user-stories.md](Teoricos/user-stories.md).
+7. Armar y priorizar el producto con [backlog.md](Teoricos/backlog.md).
+8. Planificar una iteración con [sprint-planning.md](Teoricos/sprint-planning.md).
+9. Usar las plantillas de `Templates/` para documentar el proyecto real.
+10. Consultar `Documentos/` cuando se necesiten guías de escritura, Markdown o Git.
 
 ## Relación entre materiales
 
 Los materiales están pensados para mostrar una secuencia de trabajo:
 
 ```text
-entrevista del cliente -> requerimientos -> historias de usuario -> backlog -> sprint planning -> documentación del proyecto
+entrevista del cliente -> requerimientos (IEEE 830) -> modelado UML -> historias de usuario -> backlog -> sprint planning -> documentación del proyecto
 ```
+
+`Teoricos/ADA.md` cubre el tramo de requerimientos y modelado con teoría general. `ADA/analisis.md` lo recorre de nuevo aplicado al proyecto TamboTrace, mostrando cómo cada concepto se usa en la práctica. Juntos forman un par teoría–aplicación que complementa el resto de los materiales.
 
 Esta secuencia ayuda a que los estudiantes no vean cada artefacto como un documento aislado, sino como parte del proceso completo de desarrollo de software.
 
@@ -131,4 +145,4 @@ Esta secuencia ayuda a que los estudiantes no vean cada artefacto como un docume
 
 ## Nota
 
-Este repositorio puede seguir creciendo con nuevos materiales teóricos, prácticos, casos de estudio, ejemplos de backlog y guías de trabajo para acompañar la materia durante el año.
+Este repositorio puede seguir creciendo con nuevos materiales teóricos, prácticos, casos de estudio, ejemplos de backlog y guías de trabajo para acompañar la materia durante el año. La carpeta `ADA/` está pensada para concentrar los análisis aplicados sobre proyectos concretos del curso.
