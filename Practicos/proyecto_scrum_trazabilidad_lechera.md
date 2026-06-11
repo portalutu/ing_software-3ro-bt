@@ -746,39 +746,9 @@ Al finalizar el proyecto, el equipo realiza las siguientes actividades:
 
 ---
 
-# Parte 12: Reflexionamos sobre el caso
+# Parte 12: Anexo
 
-## 32. Preguntas para analizar en clase
-
-1. ¿Qué información importante no estaba clara en la necesidad inicial del cliente?
-2. ¿Qué preguntas de la entrevista fueron más importantes para definir el alcance?
-3. ¿Qué requerimientos funcionales son indispensables para la primera versión?
-4. ¿Qué requerimientos no funcionales condicionan el diseño del sistema?
-5. ¿Por qué no conviene incluir RFID, app móvil e integración con laboratorio en la primera versión?
-6. ¿Qué diferencia hay entre una épica y una historia de usuario?
-7. ¿Por qué el Sprint 2 generó una corrección si la funcionalidad estaba implementada?
-8. ¿Qué regla de negocio nueva apareció en el Sprint 3?
-9. ¿Cómo afectaron las correcciones al backlog?
-10. ¿Qué aprendizajes deja este caso sobre la relación entre cliente y equipo de desarrollo?
-
----
-
-## 33. Actividad en clase
-
-Dividir la clase en equipos y asignarles una de estas tareas:
-
-| Equipo   | Tarea                                                                                            |
-| -------- | ------------------------------------------------------------------------------------------------ |
-| Equipo 1 | Revisar la entrevista y proponer 10 preguntas adicionales que deberían haberse hecho.            |
-| Equipo 2 | Clasificar los requerimientos en funcionales, no funcionales, reglas de negocio y restricciones. |
-| Equipo 3 | Revisar las épicas y proponer si alguna debería dividirse o unirse con otra.                     |
-| Equipo 4 | Revisar el backlog y justificar si el orden de prioridad es correcto.                            |
-| Equipo 5 | Analizar los cambios de los sprints 2 y 3 y explicar su impacto en plazo y alcance.              |
-| Equipo 6 | Proponer una fase 2 del producto con nuevas épicas e historias de usuario.                       |
-
----
-
-## 34. Glosario breve
+## 32. Glosario breve
 
 | Término                    | Explicación didáctica                                                                   |
 | -------------------------- | --------------------------------------------------------------------------------------- |
@@ -799,7 +769,7 @@ Dividir la clase en equipos y asignarles una de estas tareas:
 
 ---
 
-# Parte 13: Conclusión
+## 33: Conclusión
 
 Este proyecto permite observar el ciclo de vida completo de un desarrollo de software desde una necesidad inicial hasta una entrega aceptada por el cliente.
 
@@ -808,4 +778,3 @@ El caso muestra que el trabajo de Ingeniería de Software no se limita a program
 La metodología Scrum permite organizar el trabajo en entregas cortas, recibir retroalimentación y adaptar el producto. Sin embargo, también exige disciplina: mantener un backlog priorizado, estimar con criterio, proteger el objetivo del sprint y documentar correctamente las decisiones.
 
 En este ejemplo, el sistema TamboTrace no resuelve todos los problemas posibles del establecimiento rural, pero sí entrega una primera versión útil, verificable y alineada con el objetivo principal: mejorar la trazabilidad de los lotes de leche producidos.
-
