@@ -18,10 +18,6 @@ La palabra "requerimiento" proviene del inglés *requirement* y en ingeniería d
 
 ### ¿Por qué son tan importantes?
 
-Imaginemos que un grupo de estudiantes decide construir una casa sin planos. Cada uno empieza a construir la parte que le parece más urgente. El resultado casi seguro será un desastre: paredes que no encajan, puertas que abren al vacío, una escalera que lleva a ninguna parte. En el desarrollo de software pasa exactamente lo mismo si no se relevan correctamente los requerimientos.
-
-Los requerimientos son importantes porque:
-
 - **Definen el acuerdo entre cliente y equipo.** Sin requerimientos claros, el equipo construye lo que cree que el cliente quiere, no lo que realmente necesita.
 - **Evitan el retrabajo.** Descubrir un error en los requerimientos durante el análisis cuesta mucho menos que descubrirlo después de haber programado todo el sistema.
 - **Permiten estimar y planificar.** Sin saber qué hay que hacer, es imposible saber cuánto tiempo llevará ni cuánto costará.
@@ -755,5 +751,3 @@ A lo largo de este documento se aplicaron al proyecto TamboTrace los conceptos f
 > El análisis de requerimientos no es un trámite burocrático que se hace antes de programar. Es el trabajo que determina si el sistema que se construye resuelve el problema real o simplemente funciona técnicamente. En TamboTrace, cada corrección realizada durante los sprints fue, en última instancia, un requerimiento que no se había relevado o especificado lo suficientemente bien desde el principio.
 
 ---
-
-*Documento preparado para la asignatura Ingeniería de Software — 3.º año Bachillerato Tecnológico — UTU 2026*
