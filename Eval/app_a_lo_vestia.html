@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>App a lo Vestia — Caso Práctico de Evaluación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #08080f;
+  --bg-card:  #0d0d1a;
+  --cyan:     #00f5ff;
+  --magenta:  #ff00cc;
+  --green:    #00ff88;
+  --yellow:   #ffee00;
+  --text:     #c8c8e0;
+  --dim:      #5a5a7a;
+  --glow-c:   0 0 8px rgba(0,245,255,.5), 0 0 20px rgba(0,245,255,.25);
+  --glow-m:   0 0 8px rgba(255,0,204,.5), 0 0 20px rgba(255,0,204,.25);
+  --glow-g:   0 0 8px rgba(0,255,136,.5), 0 0 20px rgba(0,255,136,.25);
+  --glow-y:   0 0 8px rgba(255,238,0,.5),  0 0 20px rgba(255,238,0,.25);
+  --ff-title: 'Orbitron', monospace;
+  --ff-mono:  'Share Tech Mono', monospace;
+  --ff-body:  'Rajdhani', sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--ff-body);
+  font-size:16px;
+  line-height:1.65;
+  min-height:100vh;
+  position:relative;
+}
+/* scanlines */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:900;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.07) 2px,rgba(0,0,0,.07) 4px);
+}
+/* dot grid */
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:-1;
+  background-image:radial-gradient(circle,rgba(0,245,255,.045) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+.container{max-width:1080px;margin:0 auto;padding:0 24px}
+
+/* ── HEADER ── */
+header{
+  padding:56px 24px 36px;
+  text-align:center;
+  border-bottom:1px solid rgba(0,245,255,.18);
+  margin-bottom:48px;
+}
+.title-main{
+  font-family:var(--ff-title);
+  font-size:clamp(1.8rem,5vw,3.6rem);
+  font-weight:900;
+  color:var(--cyan);
+  text-shadow:var(--glow-c);
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  animation:glitch 5s infinite;
+}
+@keyframes glitch{
+  0%,88%,100%{text-shadow:var(--glow-c);transform:translate(0)}
+  90%{text-shadow:-2px 0 var(--magenta),2px 0 var(--green);transform:translate(-2px,1px)}
+  92%{text-shadow:2px 0 var(--magenta),-2px 0 var(--green);transform:translate(2px,-1px)}
+  94%{text-shadow:var(--glow-c);transform:translate(0)}
+}
+.title-sub{
+  font-family:var(--ff-mono);font-size:.85rem;
+  color:var(--magenta);text-shadow:var(--glow-m);
+  letter-spacing:.25em;text-transform:uppercase;margin-top:8px;
+}
+.title-meta{
+  font-family:var(--ff-mono);font-size:.72rem;
+  color:var(--dim);margin-top:14px;letter-spacing:.1em;
+}
+
+/* ── TYPOGRAPHY ── */
+h2{
+  font-family:var(--ff-title);font-size:1.25rem;font-weight:700;
+  color:var(--cyan);text-shadow:0 0 8px rgba(0,245,255,.35);
+  margin:40px 0 16px;padding-bottom:8px;
+  border-bottom:1px solid rgba(0,245,255,.25);
+}
+h2::before{content:'// ';color:var(--magenta)}
+h3{
+  font-family:var(--ff-title);font-size:.85rem;
+  color:var(--green);text-shadow:0 0 6px rgba(0,255,136,.35);
+  margin:24px 0 10px;letter-spacing:.04em;
+}
+h3::before{content:'> ';color:var(--dim)}
+p{margin-bottom:12px;font-size:1rem}
+strong{color:var(--cyan)}
+ul,ol{padding-left:1.4rem;margin-bottom:14px}
+li{margin-bottom:5px;font-size:.97rem}
+li::marker{color:var(--cyan)}
+hr{border:none;border-top:1px solid rgba(0,245,255,.12);margin:28px 0}
+
+/* ── TABLES ── */
+.tw{overflow-x:auto;margin-bottom:22px;border:1px solid rgba(0,245,255,.18);border-radius:4px;box-shadow:0 0 14px rgba(0,245,255,.04)}
+table{width:100%;border-collapse:collapse;font-family:var(--ff-mono);font-size:.82rem}
+thead tr{background:rgba(0,245,255,.09);border-bottom:1px solid rgba(0,245,255,.35)}
+thead th{padding:9px 13px;text-align:left;color:var(--cyan);text-transform:uppercase;letter-spacing:.07em;font-size:.74rem}
+tbody tr{border-bottom:1px solid rgba(0,245,255,.06);transition:background .15s}
+tbody tr:nth-child(even){background:rgba(0,245,255,.025)}
+tbody tr:hover{background:rgba(0,245,255,.065)}
+td{padding:8px 13px;vertical-align:top}
+td:first-child{color:var(--yellow);white-space:nowrap}
+
+/* ── BLOCKQUOTE ── */
+blockquote{
+  background:rgba(0,255,136,.035);
+  border-left:3px solid var(--green);
+  border-radius:0 4px 4px 0;
+  padding:14px 18px;margin:14px 0 22px;
+  font-family:var(--ff-mono);font-size:.855rem;
+  color:rgba(0,255,136,.85);line-height:1.7;
+  box-shadow:inset 0 0 20px rgba(0,255,136,.02),-3px 0 10px rgba(0,255,136,.08);
+}
+blockquote::before{
+  content:'// CLIENTE_DICE:';display:block;
+  font-size:.68rem;color:var(--green);opacity:.55;
+  margin-bottom:6px;letter-spacing:.15em;
+}
+
+/* ── Q&A ── */
+.qa{margin-bottom:20px}
+.qa-q{font-family:var(--ff-mono);font-size:.84rem;color:var(--cyan);margin-bottom:4px}
+.qa-q::before{content:'[EQUIPO] ';color:var(--dim)}
+
+/* ── CARD ── */
+.card{
+  background:var(--bg-card);border:1px solid rgba(0,245,255,.13);
+  border-radius:4px;padding:18px 22px;margin-bottom:18px;
+}
+.result-tag{
+  display:inline-block;font-family:var(--ff-mono);font-size:.73rem;
+  font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:4px 12px;border-radius:3px;margin:10px 0;
+}
+.result-ok{background:rgba(0,255,136,.12);color:var(--green);border:1px solid rgba(0,255,136,.3)}
+.result-warn{background:rgba(255,238,0,.08);color:var(--yellow);border:1px solid rgba(255,238,0,.3)}
+.result-err{background:rgba(255,0,204,.08);color:var(--magenta);border:1px solid rgba(255,0,204,.25)}
+
+/* ── FORM SECTION ── */
+#evaluacion{
+  margin-top:64px;padding-top:48px;
+  border-top:2px solid rgba(255,0,204,.35);
+}
+.eval-header{text-align:center;margin-bottom:40px}
+.eval-title{
+  font-family:var(--ff-title);font-size:clamp(1.1rem,2.5vw,1.8rem);
+  color:var(--magenta);text-shadow:var(--glow-m);
+  text-transform:uppercase;letter-spacing:.12em;
+}
+.eval-subtitle{
+  font-family:var(--ff-mono);font-size:.78rem;
+  color:var(--dim);margin-top:8px;letter-spacing:.15em;
+}
+.eval-progress{
+  font-family:var(--ff-mono);font-size:.88rem;
+  color:var(--green);text-shadow:var(--glow-g);margin-top:14px;
+}
+.student-info{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:32px}
+@media(max-width:580px){.student-info{grid-template-columns:1fr}}
+.fg{display:flex;flex-direction:column;gap:5px}
+.fg label{font-family:var(--ff-mono);font-size:.7rem;color:var(--dim);letter-spacing:.1em;text-transform:uppercase}
+.fg input{
+  background:rgba(0,0,0,.4);border:1px solid rgba(0,245,255,.2);border-radius:3px;
+  padding:8px 11px;color:var(--text);font-family:var(--ff-mono);font-size:.88rem;
+  outline:none;transition:border-color .2s,box-shadow .2s;
+}
+.fg input:focus{border-color:var(--cyan);box-shadow:var(--glow-c)}
+
+/* error rows */
+.error-row{
+  display:grid;
+  grid-template-columns:52px 1fr 1.6fr;
+  gap:12px;align-items:start;
+  margin-bottom:14px;padding:13px 15px;
+  background:rgba(0,0,0,.28);
+  border:1px solid rgba(0,245,255,.09);
+  border-radius:4px;transition:border-color .2s,background .2s;
+}
+.error-row:focus-within{border-color:rgba(0,245,255,.32);background:rgba(0,245,255,.025)}
+.error-row.done{border-color:rgba(0,255,136,.28);background:rgba(0,255,136,.025)}
+@media(max-width:720px){.error-row{grid-template-columns:1fr}}
+
+.rn{
+  font-family:var(--ff-title);font-size:1.3rem;font-weight:900;
+  color:var(--yellow);text-shadow:var(--glow-y);text-align:center;padding-top:2px;
+}
+.rloc{
+  font-family:var(--ff-mono);font-size:.7rem;color:var(--dim);
+  line-height:1.45;
+}
+.rloc b{display:block;color:rgba(255,238,0,.5);font-weight:normal;margin-bottom:2px}
+
+.rsel{display:flex;flex-direction:column;gap:6px}
+.rsel label,.rjus label{
+  font-family:var(--ff-mono);font-size:.68rem;
+  color:var(--dim);letter-spacing:.09em;text-transform:uppercase;
+}
+select{
+  background:rgba(0,0,0,.5);
+  border:1px solid rgba(0,245,255,.22);border-radius:3px;
+  padding:7px 28px 7px 9px;color:var(--text);
+  font-family:var(--ff-mono);font-size:.76rem;
+  outline:none;cursor:pointer;width:100%;
+  transition:border-color .2s,box-shadow .2s;
+  -webkit-appearance:none;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath fill='%2300f5ff' d='M5 7L0 0h10z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 9px center;
+}
+select:focus{border-color:var(--cyan);box-shadow:var(--glow-c)}
+select option{background:#0d0d1a;color:var(--text)}
+
+.rjus{display:flex;flex-direction:column;gap:6px}
+textarea{
+  background:rgba(0,0,0,.38);border:1px solid rgba(0,245,255,.14);border-radius:3px;
+  padding:9px 11px;color:var(--text);font-family:var(--ff-mono);
+  font-size:.8rem;line-height:1.5;resize:vertical;min-height:66px;width:100%;
+  outline:none;transition:border-color .2s,box-shadow .2s;
+}
+textarea:focus{border-color:var(--cyan);box-shadow:0 0 8px rgba(0,245,255,.2)}
+textarea::placeholder{color:rgba(255,255,255,.13);font-style:italic}
+
+.form-actions{display:flex;gap:14px;justify-content:center;margin-top:36px;flex-wrap:wrap}
+.btn{
+  font-family:var(--ff-title);font-size:.76rem;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;
+  padding:12px 28px;border:none;border-radius:3px;cursor:pointer;transition:all .2s;
+}
+.btn-p{background:var(--cyan);color:#000;box-shadow:var(--glow-c)}
+.btn-p:hover{background:#33f8ff;box-shadow:0 0 22px rgba(0,245,255,.75)}
+.btn-s{background:transparent;color:var(--magenta);border:1px solid var(--magenta);box-shadow:var(--glow-m)}
+.btn-s:hover{background:rgba(255,0,204,.09)}
+
+footer{
+  text-align:center;padding:36px 24px;margin-top:56px;
+  border-top:1px solid rgba(0,245,255,.1);
+  font-family:var(--ff-mono);font-size:.72rem;color:var(--dim);letter-spacing:.1em;
+}
+
+/* ── PRINT ── */
+@media print{
+  body::before,body::after{display:none}
+  body{background:#fff;color:#111}
+  header,h2,h3,.title-main,.title-sub{color:#111;text-shadow:none;animation:none}
+  .title-main,.title-sub,.title-meta{color:#111}
+  h2{border-color:#ccc}h2::before{color:#666}h3::before{color:#999}
+  blockquote{border-color:#999;background:#f8f8f8;color:#333}
+  blockquote::before{color:#666}
+  .tw{border-color:#ccc;box-shadow:none}
+  thead tr{background:#eee}thead th{color:#333}
+  tbody tr:hover{background:transparent}
+  td:first-child{color:#333}
+  .result-tag{background:#eee;color:#333;border-color:#ccc}
+  select,textarea,.fg input{background:#fff;color:#111;border-color:#999;font-family:monospace}
+  .error-row{border-color:#ccc;background:#fff}
+  .rn{color:#333;text-shadow:none}.rloc b{color:#888}
+  .btn{display:none}
+  footer{color:#aaa;border-color:#eee}
+  @page{margin:18mm}
+}
+@media(prefers-reduced-motion:reduce){.title-main{animation:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="title-main">App a lo Vestia</div>
+  <div class="title-sub">Caso Práctico de Evaluación &mdash; Ingeniería de Software</div>
+  <div class="title-meta">UTU &nbsp;|&nbsp; 3.º BT &nbsp;|&nbsp; 2026 &nbsp;|&nbsp; Identificá los 20 errores del proyecto</div>
+</header>
+
+<main class="container">
+
+<!-- ══════════════════════════════════════════════════════
+     PARTE 1
+     ══════════════════════════════════════════════════════ -->
+<section>
+<h2>Parte 1 &mdash; Concepción del proyecto</h2>
+
+<h3>1. Situación inicial del cliente</h3>
+<div class="card">
+  <p><strong>Nombre del producto:</strong> App a lo Vestia</p>
+  <p><strong>Cliente:</strong> Rodrigo Maximiliano Besteiro</p>
+  <p><strong>Ocupación:</strong> Comerciante independiente, 35 años</p>
+  <p><strong>Nivel tecnológico:</strong> Medio — usa smartphone y redes sociales cotidianamente; no ha trabajado con software a medida</p>
+  <p><strong>Necesidad declarada:</strong> Una aplicación para organizarse en su vida personal y laboral</p>
+  <p><strong>Presupuesto disponible:</strong> USD 4.000</p>
+</div>
+
+<h3>2. Necesidad puntual presentada por el cliente</h3>
+<p>El cliente se comunica con el equipo de desarrollo y plantea la siguiente necesidad inicial:</p>
+<blockquote>
+  "Quiero una app para organizarme de una vez por todas. Algo que tenga todo en un solo lugar: mis tareas pendientes, mis gastos mensuales, recordatorios para citas y eventos, una libreta de notas, mis contactos importantes y un seguimiento de mis hábitos personales. Nada del otro mundo, básicamente una agenda con extras.<br><br>
+  Unos amigos me dijeron que a ellos les hicieron algo parecido en dos o tres semanas. No necesito algo complicado, solo que sea linda, fácil de usar para cualquier persona, y que funcione tanto en el celular como en la computadora. Si me lo tienen listo para el 30 de este mes, sería perfecto. Con USD 4.000 debería sobrar, ¿no? Si lo hacen rápido hasta les queda tiempo libre."
+</blockquote>
+
+<h3>3. Primer análisis del equipo de desarrollo</h3>
+<p>Antes de entrevistar al cliente, el equipo identifica áreas que deben aclararse:</p>
+<div class="tw"><table>
+  <thead><tr><th>Área a aclarar</th><th>Preguntas iniciales del equipo</th></tr></thead>
+  <tbody>
+    <tr><td>Alcance</td><td>¿Qué módulos son prioritarios? ¿Todos son imprescindibles desde el inicio?</td></tr>
+    <tr><td>Usuarios</td><td>¿Solo el cliente usará la app o podrán usarla otras personas?</td></tr>
+    <tr><td>Plataforma</td><td>¿Se necesita app nativa (iOS/Android) o alcanza con web responsive?</td></tr>
+    <tr><td>Datos</td><td>¿Qué información se guardará? ¿Con qué duración o historial?</td></tr>
+    <tr><td>Sincronización</td><td>¿Debe sincronizarse entre dispositivos del mismo usuario?</td></tr>
+    <tr><td>Seguridad</td><td>¿Requiere inicio de sesión? ¿La información es privada?</td></tr>
+    <tr><td>Plazo</td><td>¿"Fin de mes" es una fecha límite real o una expectativa flexible?</td></tr>
+    <tr><td>Presupuesto</td><td>¿USD 4.000 cubre desarrollo, pruebas, despliegue y capacitación?</td></tr>
+    <tr><td>Integraciones</td><td>¿Debe conectarse con Google Calendar, apps de banco, WhatsApp u otras?</td></tr>
+  </tbody>
+</table></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     PARTE 2
+     ══════════════════════════════════════════════════════ -->
+<section>
+<h2>Parte 2 &mdash; Entrevista ficticia con el cliente</h2>
+
+<h3>4. Participantes de la entrevista</h3>
+<div class="tw"><table>
+  <thead><tr><th>Rol</th><th>Participante ficticio</th><th>Responsabilidad</th></tr></thead>
+  <tbody>
+    <tr><td>Sponsor y Scrum Master</td><td>Rodrigo Maximiliano Besteiro, el cliente</td><td>Aprueba presupuesto, coordina reuniones y dirige al equipo.</td></tr>
+    <tr><td>Product Owner</td><td>Valentín Techera, desarrollador frontend del equipo</td><td>Define el backlog y prioriza las historias de usuario.</td></tr>
+    <tr><td>Equipo de desarrollo</td><td>Valentín Techera (FE), Camila Suárez (BE), el estudiante (FE/BE)</td><td>Relevan necesidades y desarrollan el producto.</td></tr>
+  </tbody>
+</table></div>
+
+<h3>5. Entrevista ficticia</h3>
+
+<div class="qa">
+  <div class="qa-q">¿Cuál es el problema principal que querés resolver con esta aplicación?</div>
+  <blockquote>El problema es que tengo todo disperso: las tareas en papeles, los gastos en una planilla que nunca actualizo, los recordatorios en el celular pero sin orden. Quiero todo en un solo lugar.</blockquote>
+</div>
+
+<div class="qa">
+  <div class="qa-q">¿Cuáles de los módulos que mencionaste considerás más importantes?</div>
+  <blockquote>Todos son importantes, por eso los pedí. No me pidan que elija, quiero todo desde el primer día. ¿No es lo mismo programar uno que varios? Es básicamente el mismo trabajo, ¿no?</blockquote>
+</div>
+
+<div class="qa">
+  <div class="qa-q">¿La app la usarás solo vos o también otras personas?</div>
+  <blockquote>Yo principalmente, pero capaz mi socia también quiere usarla. Y a futuro podríamos abrirla para que la use cualquiera, tipo un negocio. Eso lo pensamos después.</blockquote>
+</div>
+
+<div class="qa">
+  <div class="qa-q">¿Necesitás que funcione en celular y computadora?</div>
+  <blockquote>Claro, en las dos. Y que se vea bien, que sea moderna. ¿No es lo mismo hacer para una plataforma que para las dos? Básicamente el mismo código, ¿no?</blockquote>
+</div>
+
+<div class="qa">
+  <div class="qa-q">¿Qué tecnología prefieren que usemos para desarrollarla?</div>
+  <blockquote>PHP y MySQL, ¿no? Un amigo que tiene una empresa me dijo que es lo más fácil y barato. Y así, si algún día necesito contratar a alguien más, encuentro programadores PHP sin problema. Eso ya está decidido.</blockquote>
+</div>
+
+<div class="qa">
+  <div class="qa-q">¿La app requiere inicio de sesión? ¿La información es privada?</div>
+  <blockquote>Sí, que tenga usuario y contraseña. Pero no compliquen eso, con algo básico está bien. La seguridad no es algo que me preocupe mucho, total es una app personal mía.</blockquote>
+</div>
+
+<div class="qa">
+  <div class="qa-q">¿Tiene que sincronizarse entre el celular y la computadora?</div>
+  <blockquote>Sí, obvio. Si cargo algo en el celular tiene que aparecer en la computadora. Eso es básico hoy en día, ¿no? No puede ser difícil.</blockquote>
+</div>
+
+<div class="qa">
+  <div class="qa-q">¿Cuándo necesitás tener la primera versión?</div>
+  <blockquote>Para fin de mes. Son veinte días, y con un equipo de tres personas debería sobrar tiempo. Esto es una agenda, no es la NASA.</blockquote>
+</div>
+
+<div class="qa">
+  <div class="qa-q">¿Tienen presupuesto definido?</div>
+  <blockquote>USD 4.000 y no mucho más. Eso alcanza, ¿no? Si lo hacen rápido hasta les queda plata para los dos.</blockquote>
+</div>
+
+<div class="qa">
+  <div class="qa-q">¿Qué esperan recibir al finalizar el proyecto?</div>
+  <blockquote>La app funcionando. Con que me expliquen cómo usarla en diez minutos está bien, soy bastante intuitivo. No necesito manuales ni documentación, eso es para empresas grandes.</blockquote>
+</div>
+
+<h3>6. Información obtenida en la entrevista</h3>
+<div class="tw"><table>
+  <thead><tr><th>Categoría</th><th>Información relevada</th></tr></thead>
+  <tbody>
+    <tr><td>Problema principal</td><td>Información personal dispersa en múltiples formatos y herramientas no integradas.</td></tr>
+    <tr><td>Objetivo</td><td>App unificada con tareas, gastos, recordatorios, notas, contactos y seguimiento de hábitos.</td></tr>
+    <tr><td>Alcance declarado</td><td>Todos los módulos desde el primer día. Sin priorización por parte del cliente.</td></tr>
+    <tr><td>Plataforma</td><td>Web responsive (celular y computadora).</td></tr>
+    <tr><td>Usuarios</td><td>El cliente y su socia. Posible apertura a terceros en el futuro.</td></tr>
+    <tr><td>Sincronización</td><td>Requerida entre dispositivos.</td></tr>
+    <tr><td>Plazo</td><td>20 días (fin de mes). Fijado por el cliente sin análisis técnico del equipo.</td></tr>
+    <tr><td>Presupuesto</td><td>USD 4.000 fijos.</td></tr>
+    <tr><td>Seguridad</td><td>Login básico. El cliente no considera la seguridad una prioridad.</td></tr>
+    <tr><td>Tecnología</td><td>PHP y MySQL, por recomendación de un conocido del cliente.</td></tr>
+    <tr><td>Documentación</td><td>El cliente no quiere manuales ni documentación formal.</td></tr>
+  </tbody>
+</table></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     PARTE 3
+     ══════════════════════════════════════════════════════ -->
+<section>
+<h2>Parte 3 &mdash; Alcance inicial del proyecto</h2>
+
+<h3>7. Nombre del producto</h3>
+<div class="card">
+  <p><strong>App a lo Vestia</strong></p>
+  <p>Aplicación web personal de organización integral: tareas, gastos, recordatorios, notas, contactos y hábitos.</p>
+</div>
+
+<h3>8. Visión del producto</h3>
+<p>App a lo Vestia será una aplicación web responsive que permitirá al usuario gestionar tareas pendientes, registrar gastos, crear recordatorios, tomar notas, organizar contactos y hacer seguimiento de hábitos personales, todo desde un mismo lugar, accesible desde celular y computadora con sincronización automática.</p>
+<p>La primera versión entregará todos los módulos solicitados por el cliente en un plazo de 20 días.</p>
+
+<h3>9. Alcance incluido</h3>
+<ol>
+  <li>Sistema de inicio de sesión con usuario y contraseña.</li>
+  <li>Gestión de tareas: crear, editar, marcar como completada, eliminar.</li>
+  <li>Registro de gastos con categorías, montos, fechas y descripción.</li>
+  <li>Módulo de recordatorios con notificaciones.</li>
+  <li>Libreta de notas: crear, editar y eliminar notas de texto.</li>
+  <li>Gestión de contactos importantes.</li>
+  <li>Seguimiento de hábitos personales con registro diario.</li>
+  <li>Sincronización automática entre dispositivos.</li>
+  <li>Diseño moderno y visualmente atractivo.</li>
+</ol>
+
+<h3>10. Alcance excluido para esta primera versión</h3>
+<ol>
+  <li>Integración con Google Calendar u otras agendas externas.</li>
+  <li>Integración con aplicaciones bancarias.</li>
+  <li>Módulo multiusuario o acceso para terceros.</li>
+  <li>Aplicación nativa para iOS o Android.</li>
+  <li>Panel de administración.</li>
+</ol>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     PARTE 4
+     ══════════════════════════════════════════════════════ -->
+<section>
+<h2>Parte 4 &mdash; Requerimientos del sistema</h2>
+
+<h3>11. Requerimientos funcionales</h3>
+<div class="tw"><table>
+  <thead><tr><th>Código</th><th>Requerimiento funcional</th></tr></thead>
+  <tbody>
+    <tr><td>RF1</td><td>El sistema debe permitir iniciar sesión con usuario y contraseña.</td></tr>
+    <tr><td>RF2</td><td>El sistema debe ser fácil de usar e intuitivo para cualquier persona.</td></tr>
+    <tr><td>RF3</td><td>El sistema debe permitir crear, editar, marcar como completada y eliminar tareas.</td></tr>
+    <tr><td>RF4</td><td>El sistema debe permitir registrar gastos con categoría, monto, fecha y descripción.</td></tr>
+    <tr><td>RF5</td><td>El sistema debe mostrar un resumen mensual de gastos agrupados por categoría.</td></tr>
+    <tr><td>RF6</td><td>El sistema debe permitir crear recordatorios con fecha, hora y mensaje.</td></tr>
+    <tr><td>RF7</td><td>El sistema debe enviar una notificación al usuario cuando venza un recordatorio.</td></tr>
+    <tr><td>RF8</td><td>El sistema debe permitir crear, editar y eliminar notas de texto libre.</td></tr>
+    <tr><td>RF9</td><td>El sistema debe permitir registrar contactos con nombre, teléfono y correo electrónico.</td></tr>
+    <tr><td>RF10</td><td>El sistema debe permitir registrar hábitos y marcar su cumplimiento diario.</td></tr>
+    <tr><td>RF11</td><td>El sistema debe mostrar una racha de cumplimiento para cada hábito registrado.</td></tr>
+    <tr><td>RF12</td><td>El sistema debe sincronizar automáticamente la información entre todos los dispositivos del usuario.</td></tr>
+  </tbody>
+</table></div>
+
+<h3>12. Requerimientos no funcionales</h3>
+<div class="tw"><table>
+  <thead><tr><th>Código</th><th>Requerimiento no funcional</th></tr></thead>
+  <tbody>
+    <tr><td>RNF1</td><td>La interfaz debe ser moderna y visualmente atractiva.</td></tr>
+    <tr><td>RNF2</td><td>El sistema debe funcionar correctamente desde celular y computadora.</td></tr>
+    <tr><td>RNF3</td><td>El sistema debe desarrollarse utilizando PHP y MySQL.</td></tr>
+  </tbody>
+</table></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     PARTE 5
+     ══════════════════════════════════════════════════════ -->
+<section>
+<h2>Parte 5 &mdash; Épicas del proyecto</h2>
+
+<h3>13. Definición de épicas</h3>
+<p>Una épica es una funcionalidad grande que debe dividirse en historias de usuario más pequeñas.</p>
+<div class="tw"><table>
+  <thead><tr><th>Código</th><th>Épica</th><th>Descripción</th></tr></thead>
+  <tbody>
+    <tr><td>EP1</td><td>Acceso al sistema</td><td>Login y gestión básica de sesión de usuario.</td></tr>
+    <tr><td>EP2</td><td>Gestión de tareas</td><td>Crear, editar, completar y eliminar tareas personales.</td></tr>
+    <tr><td>EP3</td><td>Registro de gastos</td><td>Registro, categorización y consulta de gastos personales.</td></tr>
+    <tr><td>EP4</td><td>Recordatorios</td><td>Creación de recordatorios y envío de notificaciones al usuario.</td></tr>
+    <tr><td>EP5</td><td>Notas</td><td>Libreta de notas de texto libre.</td></tr>
+    <tr><td>EP6</td><td>Contactos</td><td>Gestión de contactos importantes.</td></tr>
+    <tr><td>EP7</td><td>Seguimiento de hábitos</td><td>Registro y seguimiento de hábitos con rachas y métricas básicas.</td></tr>
+    <tr><td>EP8</td><td>Sincronización y despliegue</td><td>Sincronización entre dispositivos y configuración de hosting.</td></tr>
+  </tbody>
+</table></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     PARTE 6
+     ══════════════════════════════════════════════════════ -->
+<section>
+<h2>Parte 6 &mdash; Estimación de esfuerzo, plazo y costo</h2>
+
+<h3>14. Criterio de estimación</h3>
+<p>El equipo utilizará puntos de historia para estimar el esfuerzo:</p>
+<ul>
+  <li><strong>1 punto:</strong> tarea muy pequeña.</li>
+  <li><strong>3 puntos:</strong> tarea simple con algo de lógica.</li>
+  <li><strong>5 puntos:</strong> tarea media.</li>
+  <li><strong>8 puntos:</strong> tarea compleja.</li>
+  <li><strong>13 puntos:</strong> tarea grande o riesgosa.</li>
+</ul>
+<p>El equipo acuerda una velocidad de <strong>40 puntos por sprint</strong>, con sprints de <strong>1 semana</strong>, para poder entregar todo en el plazo que estableció el cliente.</p>
+
+<h3>15. Estimación por épica</h3>
+<div class="tw"><table>
+  <thead><tr><th>Código</th><th>Épica</th><th>Estimación en puntos</th></tr></thead>
+  <tbody>
+    <tr><td>EP1</td><td>Acceso al sistema</td><td>8</td></tr>
+    <tr><td>EP2</td><td>Gestión de tareas</td><td>13</td></tr>
+    <tr><td>EP3</td><td>Registro de gastos</td><td>13</td></tr>
+    <tr><td>EP4</td><td>Recordatorios</td><td>13</td></tr>
+    <tr><td>EP5</td><td>Notas</td><td>8</td></tr>
+    <tr><td>EP6</td><td>Contactos</td><td>8</td></tr>
+    <tr><td>EP7</td><td>Seguimiento de hábitos</td><td>13</td></tr>
+    <tr><td>EP8</td><td>Sincronización y despliegue</td><td>13</td></tr>
+    <tr><td><strong>Total</strong></td><td></td><td><strong>89 puntos</strong></td></tr>
+  </tbody>
+</table></div>
+<p>El cliente ya había indicado que el plazo es de 20 días. El equipo organiza el trabajo en <strong>3 sprints de 1 semana</strong> sin renegociar el plazo y sin analizar si la velocidad acordada es alcanzable para el equipo.</p>
+
+<h3>16. Estimación de costo</h3>
+<div class="tw"><table>
+  <thead><tr><th>Concepto</th><th>Valor</th></tr></thead>
+  <tbody>
+    <tr><td>Duración del proyecto</td><td>3 semanas</td></tr>
+    <tr><td>Equipo</td><td>2 desarrolladores y 1 estudiante</td></tr>
+    <tr><td>Esfuerzo estimado</td><td>180 horas</td></tr>
+    <tr><td>Tarifa promedio</td><td>USD 25 por hora</td></tr>
+    <tr><td><strong>Costo total estimado</strong></td><td><strong>USD 4.500</strong></td></tr>
+  </tbody>
+</table></div>
+<p>El equipo detecta que el costo estimado supera el presupuesto disponible del cliente en USD 500. Para no perder el proyecto, decide no comunicar esta diferencia y planea ajustar las horas al finalizar.</p>
+
+<h3>17. Propuesta presentada al cliente</h3>
+<div class="tw"><table>
+  <thead><tr><th>Elemento</th><th>Propuesta</th></tr></thead>
+  <tbody>
+    <tr><td>Producto</td><td>App a lo Vestia, aplicación web de organización personal.</td></tr>
+    <tr><td>Duración</td><td>3 semanas.</td></tr>
+    <tr><td>Metodología</td><td>Scrum, con 3 sprints de 1 semana.</td></tr>
+    <tr><td>Entregas</td><td>Incremento funcional al final de cada sprint.</td></tr>
+    <tr><td>Presupuesto</td><td>USD 4.000.</td></tr>
+    <tr><td>Forma de trabajo</td><td>El cliente coordinará las reuniones semanales y definirá prioridades.</td></tr>
+  </tbody>
+</table></div>
+
+<h3>18. Aprobación ficticia del cliente</h3>
+<blockquote>
+  "¡Perfecto! Sabía yo que era fácil. Tres semanas y listo, mejor de lo que esperaba. No compliquen nada, confío en ustedes. Por cualquier cosa me mandan un mensaje por WhatsApp y yo les digo qué hacer. ¡Arranquen!"
+</blockquote>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     PARTE 7
+     ══════════════════════════════════════════════════════ -->
+<section>
+<h2>Parte 7 &mdash; Historias de usuario</h2>
+
+<h3>19. Formato de historia de usuario</h3>
+<div class="card">
+  <p>Como <strong>[tipo de usuario]</strong>, quiero <strong>[acción o necesidad]</strong>, para <strong>[beneficio o resultado esperado]</strong>.</p>
+</div>
+
+<h3>20. Historias de usuario iniciales</h3>
+<div class="tw"><table>
+  <thead><tr><th>ID</th><th>Historia de usuario</th><th>Puntos</th><th>Prioridad</th></tr></thead>
+  <tbody>
+    <tr><td>HU1</td><td>Como usuario, quiero iniciar sesión con usuario y contraseña, para acceder a mis datos personales.</td><td>5</td><td>Alta</td></tr>
+    <tr><td>HU2</td><td>Como usuario, quiero crear una tarea con título, descripción y fecha límite, para recordar lo que tengo pendiente.</td><td>5</td><td>Alta</td></tr>
+    <tr><td>HU3</td><td>Como usuario, quiero marcar una tarea como completada, para llevar control de mi progreso.</td><td>3</td><td>Alta</td></tr>
+    <tr><td>HU4</td><td>Como usuario, quiero eliminar una tarea, para mantener mi lista actualizada.</td><td>2</td><td>Alta</td></tr>
+    <tr><td>HU5</td><td>Como usuario, quiero registrar un gasto con categoría, monto y fecha, para saber en qué gasto mi dinero.</td><td>5</td><td>Alta</td></tr>
+    <tr><td>HU6</td><td>Como usuario, quiero ver un resumen mensual de gastos por categoría, para entender mis hábitos financieros.</td><td>8</td><td>Alta</td></tr>
+    <tr><td>HU7</td><td>Como usuario, quiero crear un recordatorio con fecha y hora, para no olvidar eventos importantes.</td><td>5</td><td>Alta</td></tr>
+    <tr><td>HU8</td><td>Como usuario, quiero recibir una notificación cuando venza un recordatorio, para estar al tanto en el momento justo.</td><td>8</td><td>Alta</td></tr>
+    <tr><td>HU9</td><td>Como usuario, quiero crear y editar notas de texto libre, para guardar información rápida.</td><td>3</td><td>Alta</td></tr>
+    <tr><td>HU10</td><td>Como usuario, quiero eliminar notas, para mantener ordenada mi libreta.</td><td>2</td><td>Alta</td></tr>
+    <tr><td>HU11</td><td>Como usuario, quiero registrar un contacto con nombre, teléfono y email, para tener mis contactos importantes.</td><td>3</td><td>Alta</td></tr>
+    <tr><td>HU12</td><td>Como usuario, quiero registrar un hábito y marcarlo como cumplido cada día, para seguir mis rutinas personales.</td><td>8</td><td>Alta</td></tr>
+    <tr><td>HU13</td><td>Como usuario, quiero ver la racha de cumplimiento de un hábito, para mantenerme motivado.</td><td>5</td><td>Alta</td></tr>
+    <tr><td>HU14</td><td>Como usuario, quiero que mis datos estén disponibles en cualquier dispositivo, para acceder desde donde sea.</td><td>8</td><td>Alta</td></tr>
+  </tbody>
+</table></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     PARTE 8
+     ══════════════════════════════════════════════════════ -->
+<section>
+<h2>Parte 8 &mdash; Product Backlog inicial</h2>
+
+<h3>21. Backlog priorizado</h3>
+<div class="tw"><table>
+  <thead><tr><th>Orden</th><th>ID</th><th>Historia</th><th>Puntos</th><th>Sprint estimado</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>HU1</td><td>Inicio de sesión</td><td>5</td><td>Sprint 1</td></tr>
+    <tr><td>2</td><td>HU2</td><td>Crear tarea</td><td>5</td><td>Sprint 1</td></tr>
+    <tr><td>3</td><td>HU3</td><td>Completar tarea</td><td>3</td><td>Sprint 1</td></tr>
+    <tr><td>4</td><td>HU4</td><td>Eliminar tarea</td><td>2</td><td>Sprint 1</td></tr>
+    <tr><td>5</td><td>HU9</td><td>Crear y editar notas</td><td>3</td><td>Sprint 1</td></tr>
+    <tr><td>6</td><td>HU10</td><td>Eliminar notas</td><td>2</td><td>Sprint 1</td></tr>
+    <tr><td>7</td><td>HU11</td><td>Registrar contacto</td><td>3</td><td>Sprint 1</td></tr>
+    <tr><td>8</td><td>HU5</td><td>Registrar gasto</td><td>5</td><td>Sprint 1</td></tr>
+    <tr><td>9</td><td>HU6</td><td>Resumen mensual de gastos</td><td>8</td><td>Sprint 1</td></tr>
+    <tr><td>10</td><td>HU7</td><td>Crear recordatorio</td><td>5</td><td>Sprint 2</td></tr>
+    <tr><td>11</td><td>HU8</td><td>Notificación de recordatorio</td><td>8</td><td>Sprint 2</td></tr>
+    <tr><td>12</td><td>HU12</td><td>Registrar hábito y cumplimiento</td><td>8</td><td>Sprint 2</td></tr>
+    <tr><td>13</td><td>HU13</td><td>Racha de cumplimiento de hábito</td><td>5</td><td>Sprint 2</td></tr>
+    <tr><td>14</td><td>HU14</td><td>Sincronización entre dispositivos</td><td>8</td><td>Sprint 3</td></tr>
+  </tbody>
+</table></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     PARTE 9
+     ══════════════════════════════════════════════════════ -->
+<section>
+<h2>Parte 9 &mdash; Planificación de sprints</h2>
+
+<h3>22. Sprint 1 — Módulos principales del sistema</h3>
+
+<p><strong>Objetivo del sprint:</strong> Desarrollar los módulos principales de la aplicación.</p>
+
+<div class="tw"><table>
+  <thead><tr><th>ID</th><th>Historia</th><th>Puntos</th></tr></thead>
+  <tbody>
+    <tr><td>HU1</td><td>Inicio de sesión</td><td>5</td></tr>
+    <tr><td>HU2</td><td>Crear tarea</td><td>5</td></tr>
+    <tr><td>HU3</td><td>Completar tarea</td><td>3</td></tr>
+    <tr><td>HU4</td><td>Eliminar tarea</td><td>2</td></tr>
+    <tr><td>HU9</td><td>Crear y editar notas</td><td>3</td></tr>
+    <tr><td>HU10</td><td>Eliminar notas</td><td>2</td></tr>
+    <tr><td>HU11</td><td>Registrar contacto</td><td>3</td></tr>
+    <tr><td>HU5</td><td>Registrar gasto</td><td>5</td></tr>
+    <tr><td>HU6</td><td>Resumen mensual de gastos</td><td>8</td></tr>
+    <tr><td><strong>Total</strong></td><td></td><td><strong>36</strong></td></tr>
+  </tbody>
+</table></div>
+
+<p><strong>Nota de organización del sprint:</strong> El equipo decide no realizar reuniones diarias durante el sprint para ahorrar tiempo. Acuerdan comunicarse por WhatsApp cuando surja algún problema o duda.</p>
+
+<p><strong>Incremento esperado:</strong> Al finalizar el sprint, el cliente podrá iniciar sesión; crear, completar y eliminar tareas; tomar y eliminar notas; registrar contactos; registrar gastos y ver el resumen mensual.</p>
+
+<p><strong>Sprint Review 1:</strong> El cliente revisa el incremento y responde:</p>
+<blockquote>
+  "¡Muy bien! Ya está tomando forma, es justo lo que necesitaba. Ah, se me olvidó decirles: necesito que las tareas tengan también etiquetas de colores y que se puedan ordenar por prioridad. Son dos cositas. Y si no es mucho pedir, que las notas soporten negrita e itálica, como un editor básico. Eso es para el sprint que viene, ¿no? No debería demorar nada, son detalles de diseño nomás."
+</blockquote>
+<p>El equipo acepta las tres nuevas funciones y las agrega directamente al Sprint 2 sin ajustar el plazo total ni renegociar el presupuesto.</p>
+<p class="result-tag result-ok">Sprint aprobado &mdash; Se incorporan tres nuevas funcionalidades para el Sprint 2</p>
+
+<hr>
+
+<h3>23. Sprint 2 — Recordatorios, hábitos y mejoras solicitadas</h3>
+
+<p><strong>Objetivo del sprint:</strong> Construir los módulos de recordatorios y seguimiento de hábitos, e incorporar las mejoras pedidas por el cliente en la revisión del Sprint 1.</p>
+
+<div class="tw"><table>
+  <thead><tr><th>ID</th><th>Historia</th><th>Puntos</th></tr></thead>
+  <tbody>
+    <tr><td>HU7</td><td>Crear recordatorio</td><td>5</td></tr>
+    <tr><td>HU8</td><td>Notificación de recordatorio</td><td>8</td></tr>
+    <tr><td>HU12</td><td>Registrar hábito y cumplimiento</td><td>8</td></tr>
+    <tr><td>HU13</td><td>Racha de cumplimiento de hábito</td><td>5</td></tr>
+    <tr><td>HU-A</td><td>Etiquetas de colores en tareas</td><td>3</td></tr>
+    <tr><td>HU-B</td><td>Ordenamiento por prioridad en tareas</td><td>3</td></tr>
+    <tr><td>HU-C</td><td>Editor básico con formato en notas</td><td>5</td></tr>
+    <tr><td><strong>Total</strong></td><td></td><td><strong>37</strong></td></tr>
+  </tbody>
+</table></div>
+
+<p>El total supera la velocidad acordada, pero el equipo decide continuar sin comunicarle al cliente que el sprint está sobrecargado.</p>
+
+<p><strong>Cambio recibido durante el sprint:</strong> A mediados del sprint, el cliente envía un mensaje por WhatsApp:</p>
+<blockquote>
+  "Che, se me ocurrió algo buenísimo. ¿Pueden agregar un módulo para registrar mi peso y otro para el estado de ánimo? Son dos campitos nomás, no puede llevar más de una hora. Y así ya tengo todo lo que necesito en la app. ¡Gracias! Son los mejores."
+</blockquote>
+<p>El equipo agrega ambos módulos al sprint en curso sin documentarlos formalmente, sin estimar el esfuerzo adicional y sin informar el impacto en el plazo.</p>
+
+<p><strong>Sprint Review 2:</strong> El cliente avisa que no puede asistir a la revisión semanal:</p>
+<blockquote>
+  "Esta semana estoy re ocupado. Mándenme capturas de pantalla por WhatsApp y me fijo cuando pueda. No se preocupen, confío en ustedes, sé que lo están haciendo bien."
+</blockquote>
+<p>El equipo no realiza la Sprint Review. Sube capturas al grupo de WhatsApp, el cliente responde con un pulgar arriba, y el equipo pasa directamente al Sprint 3.</p>
+<p class="result-tag result-warn">Sprint completado parcialmente &mdash; Sprint Review no realizada &mdash; Aprobación por WhatsApp</p>
+
+<hr>
+
+<h3>24. Sprint 3 — Sincronización, ajustes y cierre del proyecto</h3>
+
+<p><strong>Objetivo del sprint:</strong> Implementar la sincronización entre dispositivos, corregir errores detectados internamente e integrar todos los módulos desarrollados.</p>
+
+<div class="tw"><table>
+  <thead><tr><th>ID</th><th>Historia</th><th>Puntos</th></tr></thead>
+  <tbody>
+    <tr><td>HU14</td><td>Sincronización entre dispositivos</td><td>8</td></tr>
+    <tr><td>Correc.</td><td>Corrección de errores internos</td><td>5</td></tr>
+    <tr><td><strong>Total</strong></td><td></td><td><strong>13</strong></td></tr>
+  </tbody>
+</table></div>
+
+<p><strong>Funcionalidades incorporadas por iniciativa del equipo:</strong> Durante el sprint, el equipo decide agregar de forma autónoma, sin que el cliente lo solicitara:</p>
+<ul>
+  <li>Modo oscuro (dark mode) en toda la interfaz.</li>
+  <li>Animaciones de transición entre pantallas.</li>
+  <li>Un panel de inicio con estadísticas visuales de uso.</li>
+</ul>
+<p>El equipo considera que son un valor agregado que el cliente va a apreciar.</p>
+
+<p><strong>Sprint Review 3:</strong> El cliente revisa el producto completo y responde:</p>
+<blockquote>
+  "¡Esto está buenísimo! El modo oscuro es un golazo, no lo esperaba. Aunque... hay algunas cositas que no andan del todo bien. Las notificaciones no llegan en iPhone, el resumen de gastos no suma bien los centésimos y a veces la sincronización duplica las tareas. Pero bueno, son detalles, lo ajustamos en algún momento, ¿no? Lo importante es que está funcionando."
+</blockquote>
+<p>El equipo cierra el proyecto sin corregir estos errores. El cliente no firma ningún documento de aceptación formal.</p>
+<p class="result-tag result-err">Sprint cerrado &mdash; Producto entregado con errores conocidos &mdash; Cierre verbal sin acta</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     PARTE 10
+     ══════════════════════════════════════════════════════ -->
+<section>
+<h2>Parte 10 &mdash; Resumen de las tres iteraciones</h2>
+
+<h3>25. Tabla general de sprints</h3>
+<div class="tw"><table>
+  <thead><tr><th>Sprint</th><th>Objetivo</th><th>Incremento entregado</th><th>Resultado</th></tr></thead>
+  <tbody>
+    <tr><td>Sprint 1</td><td>Módulos principales</td><td>Login, tareas, notas, contactos, gastos</td><td>Aprobado con nuevas solicitudes</td></tr>
+    <tr><td>Sprint 2</td><td>Recordatorios, hábitos y mejoras</td><td>Recordatorios, hábitos, mejoras + 2 módulos extra informales</td><td>Sin revisión formal</td></tr>
+    <tr><td>Sprint 3</td><td>Sincronización y cierre</td><td>Sincronización + extras no solicitados + errores sin corregir</td><td>Cierre verbal, sin acta</td></tr>
+  </tbody>
+</table></div>
+
+<h3>26. Evolución del proyecto</h3>
+<div class="tw"><table>
+  <thead><tr><th>Momento</th><th>Estado</th></tr></thead>
+  <tbody>
+    <tr><td>Inicio</td><td>El cliente describe una necesidad amplia y fija plazo y presupuesto por sí solo.</td></tr>
+    <tr><td>Después de entrevista</td><td>El equipo acepta el plazo y presupuesto del cliente sin análisis propio.</td></tr>
+    <tr><td>Después de épicas</td><td>El alcance total supera la capacidad del equipo en el tiempo disponible.</td></tr>
+    <tr><td>Después del backlog</td><td>Backlog sin priorización real: todas las historias tienen la misma urgencia.</td></tr>
+    <tr><td>Después del Sprint 1</td><td>Nuevas funciones agregadas sin impacto en plazo ni costo.</td></tr>
+    <tr><td>Después del Sprint 2</td><td>Sprint Review omitida. Cambios incorporados verbalmente sin documentación.</td></tr>
+    <tr><td>Después del Sprint 3</td><td>Producto entregado con errores conocidos. Cierre sin acta formal.</td></tr>
+  </tbody>
+</table></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     PARTE 11
+     ══════════════════════════════════════════════════════ -->
+<section>
+<h2>Parte 11 &mdash; Cierre del proyecto</h2>
+
+<h3>27. Actividades de cierre</h3>
+<ol>
+  <li>El cliente recibió acceso a la aplicación desplegada.</li>
+  <li>El equipo realizó una explicación de uso de diez minutos en videollamada.</li>
+  <li>No se elaboró manual de uso ni documentación técnica de ningún tipo.</li>
+  <li>No se firmó acta de aceptación ni documento de cierre formal.</li>
+  <li>El cliente envió un mensaje de WhatsApp: <em>"Todo bien, gracias. Cuando puedan arreglen lo del iPhone."</em></li>
+</ol>
+
+<h3>28. Estado de requerimientos al cierre</h3>
+<div class="tw"><table>
+  <thead><tr><th>Área</th><th>Estado</th></tr></thead>
+  <tbody>
+    <tr><td>Inicio de sesión</td><td>Cumplido.</td></tr>
+    <tr><td>Gestión de tareas</td><td>Cumplido. Etiquetas y ordenamiento agregados en Sprint 2.</td></tr>
+    <tr><td>Registro de gastos</td><td>Cumplido con error en suma de decimales. Sin corregir.</td></tr>
+    <tr><td>Recordatorios</td><td>Parcialmente cumplido: no funciona en dispositivos iPhone.</td></tr>
+    <tr><td>Notas con formato</td><td>Cumplido. Editor básico incorporado.</td></tr>
+    <tr><td>Contactos</td><td>Cumplido.</td></tr>
+    <tr><td>Seguimiento de hábitos</td><td>Cumplido.</td></tr>
+    <tr><td>Peso y estado de ánimo</td><td>Incorporado informalmente. Sin requerimiento documentado.</td></tr>
+    <tr><td>Sincronización</td><td>Cumplido con error de duplicación de registros. Sin corregir.</td></tr>
+    <tr><td>Seguridad</td><td>Login básico. Sin HTTPS documentado, sin política de contraseñas, sin protección de datos personales.</td></tr>
+    <tr><td>Documentación y manual</td><td>No realizado, a pedido del cliente.</td></tr>
+    <tr><td>Errores conocidos al cierre</td><td>Tres errores identificados. Sin plan de corrección formal.</td></tr>
+  </tbody>
+</table></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     PARTE 12
+     ══════════════════════════════════════════════════════ -->
+<section>
+<h2>Parte 12 &mdash; Anexo</h2>
+
+<h3>29. Glosario breve</h3>
+<div class="tw"><table>
+  <thead><tr><th>Término</th><th>Explicación</th></tr></thead>
+  <tbody>
+    <tr><td>Scrum Master</td><td>Facilitador del proceso Scrum. No es el cliente ni quien da órdenes al equipo.</td></tr>
+    <tr><td>Product Owner</td><td>Responsable de definir y priorizar el backlog. Debe conocer el negocio, no el código.</td></tr>
+    <tr><td>Requerimiento funcional</td><td>Acción o función que el sistema debe realizar.</td></tr>
+    <tr><td>Requerimiento no funcional</td><td>Condición de calidad, seguridad, rendimiento, usabilidad o restricción técnica.</td></tr>
+    <tr><td>Épica</td><td>Funcionalidad grande que debe dividirse en historias de usuario más pequeñas.</td></tr>
+    <tr><td>Historia de usuario</td><td>Descripción breve de una necesidad desde el punto de vista de un usuario.</td></tr>
+    <tr><td>Criterios de aceptación</td><td>Condiciones verificables que determinan si una historia de usuario está terminada.</td></tr>
+    <tr><td>Definition of Done</td><td>Acuerdo del equipo sobre qué significa que una tarea está completamente terminada.</td></tr>
+    <tr><td>Product Backlog</td><td>Lista priorizada de trabajo pendiente del producto.</td></tr>
+    <tr><td>Sprint</td><td>Iteración corta de trabajo en Scrum, típicamente de 1 a 4 semanas.</td></tr>
+    <tr><td>Sprint Planning</td><td>Reunión donde el equipo decide qué historias se abordarán en el sprint.</td></tr>
+    <tr><td>Daily Scrum</td><td>Reunión diaria breve (15 min.) para sincronizar al equipo y detectar bloqueos.</td></tr>
+    <tr><td>Sprint Review</td><td>Revisión del incremento con el cliente o interesados al final del sprint.</td></tr>
+    <tr><td>Sprint Retrospective</td><td>Reunión del equipo para reflexionar y mejorar el proceso de trabajo.</td></tr>
+    <tr><td>Velocity</td><td>Cantidad de puntos que un equipo puede completar en un sprint, basada en historial real.</td></tr>
+    <tr><td>Gold Plating</td><td>Agregar funcionalidades no solicitadas que consumen tiempo y recursos sin valor garantizado.</td></tr>
+    <tr><td>Scope Creep</td><td>Expansión no controlada del alcance sin ajuste de plazo o presupuesto.</td></tr>
+    <tr><td>Cierre formal</td><td>Etapa final con acta de aceptación firmada, documentación entregada y pendientes acordados.</td></tr>
+  </tbody>
+</table></div>
+
+</section>
+
+</main>
+
+<!-- ══════════════════════════════════════════════════════
+     FORMULARIO DE EVALUACIÓN
+     ══════════════════════════════════════════════════════ -->
+<section id="evaluacion" class="container">
+
+  <div class="eval-header">
+    <div class="eval-title">&gt; Análisis de errores :: Protocolo activo</div>
+    <div class="eval-subtitle">Identificá el tipo de error en cada ubicación indicada y justificá tu respuesta</div>
+    <div class="eval-progress" id="progress">0 / 20 completados</div>
+  </div>
+
+  <form id="evalForm" onsubmit="return false">
+
+    <div class="student-info">
+      <div class="fg"><label>Nombre completo</label><input type="text" id="nombre" placeholder="Tu nombre y apellido"></div>
+      <div class="fg"><label>Grupo / Clase</label><input type="text" id="grupo" placeholder="Ej: 3BT-A"></div>
+      <div class="fg"><label>Docente</label><input type="text" id="docente" value="Diego 'Frozono' Vera" readonly style="opacity:.6;cursor:default"></div>
+      <div class="fg"><label>Fecha</label><input type="date" id="fecha"></div>
+    </div>
+
+    <!-- Opciones del desplegable (compartidas por todos los select via JS) -->
+    <template id="opciones">
+      <option value="">— seleccioná el tipo de error —</option>
+      <optgroup label="Errores de proceso Scrum">
+        <option value="a1">Ausencia de Definition of Done (DoD)</option>
+        <option value="a2">Daily Scrum eliminado o reemplazado informalmente</option>
+        <option value="a3">Sprint Goal vago o no definido</option>
+        <option value="a4">Sprint Review omitida o realizada de forma informal</option>
+        <option value="a5">Sprints con duración inapropiada para el proyecto</option>
+      </optgroup>
+      <optgroup label="Errores de roles y organización">
+        <option value="b1">Conflicto de roles: cliente actuando como Scrum Master</option>
+        <option value="b2">Desarrollador asignado como Product Owner</option>
+        <option value="b3">Equipo de desarrollo subdimensionado para el alcance</option>
+        <option value="b4">Exceso de reuniones de seguimiento</option>
+        <option value="b5">Falta de capacitación técnica del equipo de desarrollo</option>
+      </optgroup>
+      <optgroup label="Errores de requerimientos">
+        <option value="c1">Backlog sin priorización real</option>
+        <option value="c2">Falta de criterios de aceptación en historias de usuario</option>
+        <option value="c3">Requerimiento ambiguo o no verificable</option>
+        <option value="c4">Requerimientos de seguridad ausentes</option>
+        <option value="c5">Restricción tecnológica impuesta por el cliente</option>
+      </optgroup>
+      <optgroup label="Errores de gestión de alcance y cambios">
+        <option value="d1">Cambios de alcance aceptados sin documentación formal</option>
+        <option value="d2">Gold plating: funciones no solicitadas agregadas por el equipo</option>
+        <option value="d3">Historial de versiones del código mal gestionado</option>
+        <option value="d4">Scope creep sin gestión formal de cambios</option>
+        <option value="d5">Sin diseño de base de datos documentado</option>
+      </optgroup>
+      <optgroup label="Errores de planificación y costos">
+        <option value="e1">Información de presupuesto ocultada al cliente</option>
+        <option value="e2">Estimación de velocidad sin base histórica</option>
+        <option value="e3">Plazo fijado por el cliente sin análisis técnico del equipo</option>
+        <option value="e4">Sin identificación ni gestión de riesgos del proyecto</option>
+        <option value="e5">Sin proceso de pruebas ni QA definido</option>
+      </optgroup>
+      <optgroup label="Errores de cierre y entrega">
+        <option value="f1">Cierre informal sin acta de aceptación</option>
+        <option value="f2">Contrato sin cláusulas de penalización por incumplimiento</option>
+        <option value="f3">Documentación técnica excesiva o innecesaria</option>
+        <option value="f4">Falta de integración continua (CI/CD)</option>
+        <option value="f5">Mala gestión del repositorio de control de versiones</option>
+      </optgroup>
+    </template>
+
+    <!-- 20 FILAS -->
+    <div id="rows"></div>
+
+    <div class="form-actions">
+      <button class="btn btn-p" onclick="imprimir()">Imprimir / Exportar PDF</button>
+      <button class="btn btn-s" onclick="limpiar()">Reiniciar formulario</button>
+    </div>
+
+  </form>
+</section>
+
+<footer>
+  App a lo Vestia &mdash; Caso Práctico &nbsp;|&nbsp; Ingeniería de Software &nbsp;|&nbsp; 3.º BT &nbsp;|&nbsp; UTU 2026
+</footer>
+
+<script>
+const filas = [
+  { n:"01", loc:"Parte 2 / Sección 6", ref:"Tabla: Información obtenida en la entrevista — fila «Plazo»" },
+  { n:"02", loc:"Parte 4 / Sección 11", ref:"Requerimientos funcionales — RF2" },
+  { n:"03", loc:"Parte 2 / Sección 4", ref:"Tabla de participantes — columna «Rol» del cliente" },
+  { n:"04", loc:"Parte 7 / Sección 20", ref:"Historias de usuario — estructura de la tabla (¿qué falta en cada fila?)" },
+  { n:"05", loc:"Parte 7 / Sección 20", ref:"Historias de usuario — columna «Prioridad» (observá los valores)" },
+  { n:"06", loc:"Parte 6 / Sección 14", ref:"Criterio de estimación — velocidad acordada por el equipo" },
+  { n:"07", loc:"Parte 9 / Secciones 22 y 23", ref:"Sprint Review 1 y cambio recibido en Sprint 2 — ¿qué hizo el equipo?" },
+  { n:"08", loc:"Parte 9 / Sección 23", ref:"Sprint Review 2 — ¿qué pasó con la reunión de revisión?" },
+  { n:"09", loc:"Todo el documento", ref:"Proceso de trabajo del equipo — ¿qué acuerdo previo nunca se menciona?" },
+  { n:"10", loc:"Parte 9 / Sección 22", ref:"Nota de organización del Sprint 1 — ¿qué ceremonia eliminó el equipo?" },
+  { n:"11", loc:"Parte 2 / Sección 4", ref:"Tabla de participantes — columna «Rol» del desarrollador Valentín Techera" },
+  { n:"12", loc:"Parte 9 / Sección 23", ref:"Cambio recibido durante el Sprint 2 — ¿cómo se gestionó el pedido?" },
+  { n:"13", loc:"Todo el documento", ref:"Proceso de validación del producto — ¿qué proceso de calidad no se menciona en ningún sprint?" },
+  { n:"14", loc:"Todo el documento", ref:"Planificación previa al desarrollo — ¿qué análisis falta completamente?" },
+  { n:"15", loc:"Parte 4 / Sección 12", ref:"Requerimientos no funcionales — RNF3 (¿de quién debería ser esta decisión?)" },
+  { n:"16", loc:"Parte 9 / Sección 24", ref:"Funcionalidades incorporadas por el equipo — ¿qué problema representa esto?" },
+  { n:"17", loc:"Parte 9 / Sección 22", ref:"Objetivo del Sprint 1 — evaluá la calidad del Sprint Goal definido" },
+  { n:"18", loc:"Parte 6 / Sección 16", ref:"Estimación de costo — último párrafo (¿qué hizo el equipo con la diferencia detectada?)" },
+  { n:"19", loc:"Parte 4 / Sección 12", ref:"Tabla de requerimientos no funcionales — ¿qué dimensión crítica no está representada?" },
+  { n:"20", loc:"Parte 11 / Sección 27", ref:"Actividades de cierre del proyecto — puntos 3, 4 y 5" },
+];
+
+const tmpl = document.getElementById('opciones');
+
+function buildRows() {
+  const container = document.getElementById('rows');
+  filas.forEach((f, i) => {
+    const sel = document.createElement('select');
+    sel.id = `sel${i}`;
+    sel.setAttribute('aria-label', `Tipo de error fila ${f.n}`);
+    sel.innerHTML = tmpl.innerHTML;
+    sel.addEventListener('change', () => checkDone(i));
+
+    const ta = document.createElement('textarea');
+    ta.id = `jus${i}`;
+    ta.placeholder = '// Justificá tu elección: ¿qué está mal y qué debería haberse hecho?';
+    ta.setAttribute('aria-label', `Justificación fila ${f.n}`);
+    ta.addEventListener('input', () => checkDone(i));
+
+    const row = document.createElement('div');
+    row.className = 'error-row';
+    row.id = `row${i}`;
+    row.innerHTML = `
+      <div class="rn">${f.n}</div>
+      <div class="rloc">
+        <b>${f.loc}</b>
+        ${f.ref}
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="rsel">
+          <label for="sel${i}">Tipo de error identificado</label>
+        </div>
+        <div class="rjus">
+          <label for="jus${i}">Justificación</label>
+        </div>
+      </div>
+    `;
+    // inject elements into their wrappers
+    row.querySelector('.rsel').appendChild(sel);
+    row.querySelector('.rjus').appendChild(ta);
+
+    container.appendChild(row);
+  });
+}
+
+function checkDone(i) {
+  const sel = document.getElementById(`sel${i}`);
+  const ta  = document.getElementById(`jus${i}`);
+  const row = document.getElementById(`row${i}`);
+  const done = sel.value !== '' && ta.value.trim().length > 5;
+  row.classList.toggle('done', done);
+  updateProgress();
+}
+
+function updateProgress() {
+  let count = 0;
+  filas.forEach((_, i) => {
+    const sel = document.getElementById(`sel${i}`);
+    const ta  = document.getElementById(`jus${i}`);
+    if (sel && ta && sel.value !== '' && ta.value.trim().length > 5) count++;
+  });
+  document.getElementById('progress').textContent = `${count} / 20 completados`;
+}
+
+function imprimir() { window.print(); }
+
+function limpiar() {
+  if (!confirm('¿Reiniciar el formulario? Se perderán todas las respuestas.')) return;
+  filas.forEach((_, i) => {
+    const sel = document.getElementById(`sel${i}`);
+    const ta  = document.getElementById(`jus${i}`);
+    if (sel) sel.value = '';
+    if (ta)  ta.value  = '';
+    const row = document.getElementById(`row${i}`);
+    if (row) row.classList.remove('done');
+  });
+  ['nombre','grupo','docente','fecha'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  updateProgress();
+}
+
+buildRows();
+
+// set today's date as default
+document.getElementById('fecha').valueAsDate = new Date();
+</script>
+</body>
+</html>
