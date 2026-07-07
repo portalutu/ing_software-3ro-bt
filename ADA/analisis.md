@@ -726,9 +726,930 @@ Esta tabla refleja exactamente el requerimiento HU20: el sistema debe poder most
 
 ---
 
+---
+
+# 2. Análisis de Diseño de Base de Datos y Modelado UML
+
+## 2.1. Modelo Entidad-Relación (MER)
+
+### ¿Qué es el Modelo Entidad-Relación?
+
+El **Modelo Entidad-Relación** (MER) es un modelo conceptual de datos que describe la estructura lógica de una base de datos de forma independiente de cualquier tecnología específica. Su objetivo es representar de manera clara y organizada cómo se relacionan los datos que maneja un sistema.
+
+En términos sencillos: el MER es un "plano" que muestra qué información necesita guardar el sistema, en qué tablas (entidades) se organiza, y cómo esas tablas están conectadas entre sí (relaciones).
+
+El MER fue creado por **Peter Chen en 1976** y se ha convertido en el estándar de facto para el diseño de bases de datos relacionales. Es independiente del lenguaje de programación o del gestor de base de datos que se use (PostgreSQL, MySQL, SQL Server, etc.).
+
+### Conceptos fundamentales del MER
+
+#### Entidad
+
+Una **entidad** es un objeto, cosa o concepto del mundo real que queremos guardar información sobre él. En una base de datos, cada entidad se convierte en una tabla.
+
+**Ejemplos de entidades en TamboTrace:**
+- **Vaca**: cada animal del tambo.
+- **Ordeñe**: cada proceso de ordeñe realizado.
+- **Lote**: cada lote de leche producido.
+- **Usuario**: cada persona que accede al sistema.
+- **Tanque**: cada tanque de almacenamiento de leche.
+
+Las entidades se representan en el diagrama MER como **rectángulos** con el nombre de la entidad adentro.
+
+#### Atributo
+
+Un **atributo** es una propiedad o característica de una entidad. Cada atributo almacena un tipo específico de dato.
+
+**Ejemplos de atributos de la entidad Vaca:**
+- Número de caravana (texto, único)
+- Nombre (texto, opcional)
+- Raza (texto)
+- Fecha de nacimiento (fecha)
+- Estado (texto: "en producción", "secado", "tratamiento", "baja")
+- Observaciones (texto)
+
+Un atributo es **obligatorio** si siempre debe tener un valor, u **opcional** si puede no tener valor. En TamboTrace, el número de caravana es obligatorio (RF3), pero el nombre es opcional.
+
+Los atributos se representan en el diagrama MER como **óvalos** conectados a la entidad.
+
+#### Clave primaria
+
+Una **clave primaria** es un atributo (o conjunto de atributos) que identifica de forma única a cada instancia de una entidad. Cada fila en la tabla debe tener un valor único en la clave primaria.
+
+**En TamboTrace:**
+- La clave primaria de Vaca es el número de caravana (es único dentro del tambo).
+- La clave primaria de Ordeñe es un ID auto-incrementable (porque el mismo día pueden haber múltiples ordeñes).
+
+Sin una clave primaria bien definida, es imposible garantizar que no haya registros duplicados o confusos.
+
+#### Relación
+
+Una **relación** describe cómo dos o más entidades están asociadas entre sí. No todas las entidades están relacionadas; solo aquellas que tienen una asociación lógica en el negocio.
+
+**Ejemplos de relaciones en TamboTrace:**
+- Una **Vaca** participa en múltiples **Ordeñes**.
+- Un **Ordeñe** genera un **Lote** de leche.
+- Un **Lote** se almacena en un **Tanque**.
+- Un **Usuario** registra múltiples **Ordeñes**.
+
+Las relaciones se representan en el diagrama MER como **líneas** que conectan dos entidades.
+
+#### Cardinalidad
+
+La **cardinalidad** describe cuántas instancias de una entidad se pueden relacionar con instancias de otra entidad. Las cardinalidades más comunes son:
+
+| Cardinalidad | Notación | Significado | Ejemplo |
+|---|---|---|---|
+| **1:1** (uno a uno) | 1 — 1 | Una instancia de A se relaciona con una de B, y viceversa. | Un tanque contiene exactamente una leche (simplificado). |
+| **1:N** (uno a muchos) | 1 — N | Una instancia de A se relaciona con múltiples de B. | Un usuario registra múltiples ordeñes. |
+| **N:M** (muchos a muchos) | N — M | Múltiples instancias de A se relacionan con múltiples de B. | Múltiples vacas participan en múltiples ordeñes. |
+
+### Diagrama MER de TamboTrace
+
+El siguiente diagrama muestra las entidades y relaciones principales del sistema:
+
+```
+┌─────────────┐
+│   USUARIO   │
+├─────────────┤
+│ id          │ (PK)
+│ nombre      │
+│ email       │
+│ rol         │
+│ activo      │
+└─────────────┘
+      │ 1
+      │ registra
+      │ N
+      ▼
+┌──────────────┐
+│   ORDEÑE     │
+├──────────────┤
+│ id           │ (PK)
+│ fecha        │
+│ turno        │
+│ responsable  │ (FK → USUARIO)
+│ tanque       │ (FK → TANQUE)
+│ observaciones│
+└──────────────┘
+      │ 1
+      │ genera
+      │ 1
+      ▼
+┌──────────────┐      ┌───────────────┐
+│    LOTE      │ M ◄─► N │    VACA     │
+├──────────────┤      ├───────────────┤
+│ id           │ (PK) │ caravana      │ (PK)
+│ ordeñe       │ (FK) │ nombre        │
+│ litros       │      │ raza          │
+│ temperatura  │      │ fecha_nac     │
+│ grasa        │      │ estado        │
+│ proteína     │      │ observaciones │
+│ células_som  │      └───────────────┘
+│ antibióticos│
+│ estado       │
+│ fecha_cierre │
+└──────────────┘
+      │ 1
+      │ se almacena en
+      │ 1
+      ▼
+┌──────────────┐
+│    TANQUE    │
+├──────────────┤
+│ id           │ (PK)
+│ número       │
+│ ubicación    │
+│ capacidad    │
+└──────────────┘
+
+┌──────────────────────┐
+│  LOTE_VACA_EXCLUIDA  │ (tabla de relación)
+├──────────────────────┤
+│ id                   │ (PK)
+│ lote                 │ (FK → LOTE)
+│ vaca                 │ (FK → VACA)
+│ motivo               │
+│ fecha_exclusión      │
+└──────────────────────┘
+```
+
+**Explicación de las relaciones:**
+
+1. **USUARIO → ORDEÑE (1:N)**: Un usuario registra muchos ordeñes. La relación se implementa con una clave foránea en ORDEÑE que apunta a USUARIO.
+
+2. **ORDEÑE → LOTE (1:1)**: Un ordeñe genera un lote (relación simplificada para esta versión). La relación se implementa con una clave foránea en LOTE que apunta a ORDEÑE.
+
+3. **VACA ◄→ LOTE (N:M)**: Un lote contiene múltiples vacas, y una vaca puede participar en múltiples lotes. Esta relación se implementa mediante una **tabla de relación** llamada LOTE_VACA que tiene dos claves foráneas.
+
+4. **LOTE → TANQUE (1:1)**: Un lote se almacena en un tanque. La relación se implementa con una clave foránea en LOTE que apunta a TANQUE.
+
+5. **LOTE_VACA_EXCLUIDA**: Es una tabla adicional que registra las exclusiones de vacas en ordeñes, implementando la funcionalidad de RF7.
+
+---
+
+## 2.2. Normalización y Formas Normales
+
+### ¿Qué es la normalización?
+
+La **normalización** es un proceso sistemático que organiza los datos de una base de datos para:
+
+1. **Eliminar redundancia**: evitar que el mismo dato esté repetido en múltiples lugares.
+2. **Garantizar integridad**: asegurar que los datos sean consistentes y confiables.
+3. **Facilitar el mantenimiento**: simplificar las operaciones de actualización, inserción y eliminación.
+
+Sin normalización, una base de datos puede caer en inconsistencias graves. Por ejemplo, si se guarda el nombre de un usuario en múltiples tablas y ese nombre cambia, hay riesgo de que quede diferente en cada lugar.
+
+### Las Formas Normales
+
+Las formas normales son niveles progresivos de normalización. A mayor número de forma normal, menos redundancia y mayor integridad de datos.
+
+Las tres primeras formas normales (1FN, 2FN, 3FN) son las más utilizadas en la práctica:
+
+#### Primera Forma Normal (1FN)
+
+**Regla de 1FN**: Cada atributo debe contener un único valor (no listas ni conjuntos).
+
+**Problema sin 1FN:**
+
+Imagine una tabla así:
+
+| id_ordeñe | vacas_participantes | observaciones |
+|---|---|---|
+| 1 | 001, 002, 003 | Vaca 001 con mastitis |
+| 2 | 002, 005 | Temperatura baja |
+
+El atributo `vacas_participantes` contiene múltiples valores separados por comas. Esto dificulta consultar, filtrar y actualizar los datos. ¿Cómo buscar todas las ordeñes en las que participó la vaca 002?
+
+**Solución 1FN:**
+
+Se crea una tabla de relación separada:
+
+**Tabla ORDEÑE:**
+
+| id_ordeñe | fecha | turno |
+|---|---|---|
+| 1 | 2026-07-01 | Mañana |
+| 2 | 2026-07-01 | Tarde |
+
+**Tabla ORDEÑE_VACA:**
+
+| id | ordeñe | vaca |
+|---|---|---|
+| 1 | 1 | 001 |
+| 2 | 1 | 002 |
+| 3 | 1 | 003 |
+| 4 | 2 | 002 |
+| 5 | 2 | 005 |
+
+Ahora cada registro tiene un único valor en cada atributo. La consulta "¿en cuántas ordeñes participó la vaca 002?" es simple y eficiente.
+
+#### Segunda Forma Normal (2FN)
+
+**Regla de 2FN**: La tabla debe estar en 1FN Y todos los atributos no-clave deben depender de la clave primaria completa, no de parte de ella.
+
+**Problema sin 2FN:**
+
+Suponga una tabla con clave primaria compuesta (ordeñe, vaca):
+
+| ordeñe | vaca | fecha | turno | estado |
+|---|---|---|---|---|
+| 1 | 001 | 2026-07-01 | Mañana | Incluida |
+| 1 | 002 | 2026-07-01 | Mañana | Incluida |
+
+El problema: `fecha` y `turno` dependen solo del ordeñe, no de la combinación (ordeñe, vaca). Si queremos cambiar la fecha del ordeñe 1 de 2026-07-01 a 2026-07-02, debemos actualizarla en múltiples filas. Esto genera redundancia y riesgo de inconsistencia.
+
+**Solución 2FN:**
+
+Se separan los atributos según de qué dependen:
+
+**Tabla ORDEÑE:**
+
+| id | fecha | turno |
+|---|---|---|
+| 1 | 2026-07-01 | Mañana |
+
+**Tabla ORDEÑE_VACA:**
+
+| ordeñe | vaca | estado |
+|---|---|---|
+| 1 | 001 | Incluida |
+| 1 | 002 | Incluida |
+
+Ahora:
+- Los atributos `fecha` y `turno` están en ORDEÑE, donde dependen de la clave primaria completa (id del ordeñe).
+- El atributo `estado` está en ORDEÑE_VACA, donde depende de la clave primaria completa (ordeñe, vaca).
+
+#### Tercera Forma Normal (3FN)
+
+**Regla de 3FN**: La tabla debe estar en 2FN Y ningún atributo no-clave debe depender de otro atributo no-clave.
+
+**Problema sin 3FN:**
+
+| id_vaca | nombre | raza | raza_descripción |
+|---|---|---|---|
+| 001 | Margarita | Holstein | Vaca lechera de origen holandés, alta producción |
+| 002 | Blanca | Holstein | Vaca lechera de origen holandés, alta producción |
+| 003 | Rosa | Jersey | Vaca lechera de origen británico, leche con más grasa |
+
+El problema: `raza_descripción` depende de `raza`, no de `id_vaca`. Si la descripción de Holstein cambia, debemos actualizarla en múltiples filas. Además, la tabla ocupa más espacio de lo necesario.
+
+**Solución 3FN:**
+
+Se crea una tabla separada para razas:
+
+**Tabla VACA:**
+
+| id | nombre | raza_id |
+|---|---|---|
+| 001 | Margarita | 1 |
+| 002 | Blanca | 1 |
+| 003 | Rosa | 2 |
+
+**Tabla RAZA:**
+
+| id | nombre | descripción |
+|---|---|---|
+| 1 | Holstein | Vaca lechera de origen holandés, alta producción |
+| 2 | Jersey | Vaca lechera de origen británico, leche con más grasa |
+
+Ahora:
+- La descripción de la raza se guarda una sola vez en la tabla RAZA.
+- Si cambia, se actualiza en un solo lugar.
+- La tabla VACA es más compacta y eficiente.
+
+### Estructura 3FN de TamboTrace
+
+La base de datos de TamboTrace está diseñada hasta 3FN. Aquí está la estructura completa:
+
+**Tabla USUARIO** (almacena personas que acceden al sistema)
+
+| Columna | Tipo | Restricción | Descripción |
+|---|---|---|---|
+| id | INT | PRIMARY KEY | Identificador único |
+| nombre | VARCHAR(100) | NOT NULL | Nombre completo |
+| email | VARCHAR(100) | UNIQUE | Email para acceso |
+| contraseña_hash | VARCHAR(255) | NOT NULL | Contraseña encriptada |
+| rol | VARCHAR(50) | NOT NULL | admin, encargado, operario, veterinario |
+| activo | BOOLEAN | DEFAULT TRUE | Si la cuenta está activa |
+| fecha_creación | TIMESTAMP | DEFAULT NOW() | Cuándo se creó la cuenta |
+
+**Tabla VACA** (animales del tambo)
+
+| Columna | Tipo | Restricción | Descripción |
+|---|---|---|---|
+| caravana | VARCHAR(10) | PRIMARY KEY | Número único de la vaca |
+| nombre | VARCHAR(100) | NULLABLE | Nombre opcional |
+| raza_id | INT | FOREIGN KEY → RAZA | Referencia a la tabla RAZA |
+| fecha_nacimiento | DATE | NOT NULL | Fecha de nacimiento |
+| estado | ENUM | NOT NULL | en_producción, secado, tratamiento, baja |
+| observaciones | TEXT | NULLABLE | Notas sobre la vaca |
+| fecha_registro | TIMESTAMP | DEFAULT NOW() | Cuándo se registró |
+
+**Tabla RAZA** (catálogo de razas)
+
+| Columna | Tipo | Restricción | Descripción |
+|---|---|---|---|
+| id | INT | PRIMARY KEY | Identificador único |
+| nombre | VARCHAR(100) | NOT NULL | Nombre de la raza (Holstein, Jersey, etc.) |
+| descripción | TEXT | NULLABLE | Características de la raza |
+
+**Tabla TANQUE** (almacenamiento de leche)
+
+| Columna | Tipo | Restricción | Descripción |
+|---|---|---|---|
+| id | INT | PRIMARY KEY | Identificador único |
+| número | VARCHAR(50) | NOT NULL | Número o nombre del tanque |
+| ubicación | VARCHAR(200) | NULLABLE | Dónde se encuentra |
+| capacidad_litros | INT | NOT NULL | Capacidad en litros |
+
+**Tabla ORDEÑE** (cada sesión de ordeñe)
+
+| Columna | Tipo | Restricción | Descripción |
+|---|---|---|---|
+| id | INT | PRIMARY KEY | Identificador único |
+| fecha | DATE | NOT NULL | Fecha del ordeñe |
+| turno | ENUM | NOT NULL | mañana, tarde, noche |
+| usuario_responsable | INT | FOREIGN KEY → USUARIO | Quién registró el ordeñe |
+| tanque_id | INT | FOREIGN KEY → TANQUE | Tanque usado en este ordeñe |
+| observaciones | TEXT | NULLABLE | Notas del ordeñe |
+| fecha_registro | TIMESTAMP | DEFAULT NOW() | Cuándo se registró |
+| CONSTRAINT único_turno | UNIQUE | (fecha, turno, tanque_id) | No hay dos ordeñes iguales |
+
+**Tabla LOTE** (lotes de leche producidos)
+
+| Columna | Tipo | Restricción | Descripción |
+|---|---|---|---|
+| id | INT | PRIMARY KEY | Identificador único |
+| ordeñe_id | INT | FOREIGN KEY → ORDEÑE | Ordeñe que generó este lote |
+| litros_estimados | DECIMAL(8,2) | NOT NULL | Volumen en litros |
+| temperatura | DECIMAL(5,2) | NULLABLE | Temperatura en °C |
+| grasa_porcentaje | DECIMAL(5,2) | NULLABLE | % de grasa |
+| proteína_porcentaje | DECIMAL(5,2) | NULLABLE | % de proteína |
+| células_somáticas | INT | NULLABLE | Células por mL de leche |
+| resultado_antibióticos | VARCHAR(50) | NULLABLE | Presencia de antibióticos |
+| estado | ENUM | NOT NULL | BORRADOR, INCOMPLETO, PENDIENTE_ANÁLISIS, COMPLETO, CERRADO |
+| fecha_cierre | TIMESTAMP | NULLABLE | Cuándo se cerró el lote |
+| usuario_cierre | INT | FOREIGN KEY → USUARIO | Quién cerró el lote |
+| observaciones | TEXT | NULLABLE | Notas adicionales |
+| fecha_creación | TIMESTAMP | DEFAULT NOW() | Cuándo se creó |
+
+**Tabla ORDEÑE_VACA** (relación N:M entre ordeñes y vacas)
+
+| Columna | Tipo | Restricción | Descripción |
+|---|---|---|---|
+| id | INT | PRIMARY KEY | Identificador único |
+| ordeñe_id | INT | FOREIGN KEY → ORDEÑE | Referencia al ordeñe |
+| vaca_caravana | VARCHAR(10) | FOREIGN KEY → VACA | Referencia a la vaca |
+| incluida | BOOLEAN | DEFAULT TRUE | Si está incluida o excluida |
+| motivo_exclusión | VARCHAR(200) | NULLABLE | Si está excluida, por qué |
+| fecha_registro | TIMESTAMP | DEFAULT NOW() | Cuándo se registró |
+| CONSTRAINT único_participación | UNIQUE | (ordeñe_id, vaca_caravana) | Cada vaca aparece una sola vez por ordeñe |
+
+**Tabla HISTORIAL_CAMBIOS** (registro de auditoría, RF15)
+
+| Columna | Tipo | Restricción | Descripción |
+|---|---|---|---|
+| id | INT | PRIMARY KEY | Identificador único |
+| lote_id | INT | FOREIGN KEY → LOTE | Lote afectado |
+| usuario_id | INT | FOREIGN KEY → USUARIO | Quién hizo el cambio |
+| tipo_cambio | VARCHAR(100) | NOT NULL | qué cambió (cierre, edición, etc.) |
+| valor_anterior | TEXT | NULLABLE | Valor antes del cambio |
+| valor_nuevo | TEXT | NULLABLE | Valor después del cambio |
+| fecha_cambio | TIMESTAMP | DEFAULT NOW() | Cuándo ocurrió el cambio |
+| ip_origen | VARCHAR(50) | NULLABLE | IP desde donde se hizo |
+
+### ¿Por qué 3FN en TamboTrace?
+
+La decisión de normalizar hasta 3FN responde a:
+
+1. **Integridad**: Los datos de referencia (razas, usuarios) se guardan una sola vez y se reutilizan.
+2. **Escalabilidad**: Cuando el sistema crezca (más vacas, más lotes), la estructura no necesita rediseño.
+3. **Mantenimiento**: Si se necesita cambiar la descripción de una raza, se hace en un lugar.
+4. **Eficiencia**: Las consultas son más rápidas porque los índices sobre claves primarias y foráneas son efectivos.
+
+Normalizaciones más allá de 3FN (BCNF, 4FN, 5FN) son raramente necesarias en sistemas de negocio como este. Su mayor complejidad no suele justificar el beneficio.
+
+---
+
+## 2.3. Introducción a UML
+
+### ¿Qué es UML?
+
+**UML** significa *Unified Modeling Language* (Lenguaje Unificado de Modelado). Es un estándar internacional para crear diagramas que representen sistemas de software desde diferentes perspectivas.
+
+A diferencia del MER que se enfoca específicamente en datos, UML es más general y permite modelar:
+
+- **Estructura estática**: clases, componentes, arquitectura.
+- **Comportamiento dinámico**: interacciones, estados, flujos.
+- **Casos de uso**: quién usa el sistema y qué puede hacer.
+
+UML existe porque el software es más que una base de datos. Incluye lógica, interfaces, procesos, y UML proporciona los diagramas para representar todo esto de forma estándar.
+
+### Tipos de diagramas UML
+
+Hay 14 tipos de diagramas UML, pero los más utilizados en proyectos de software son:
+
+| Diagrama | Propósito | Cuándo usarlo |
+|---|---|---|
+| **Casos de uso** | Muestra usuarios y qué pueden hacer en el sistema. | Al inicio, para entender el alcance funcional. |
+| **Clases** | Muestra clases, atributos, métodos y relaciones entre clases. | Durante el diseño, antes de programar. |
+| **Secuencia** | Muestra el orden de mensajes entre objetos a lo largo del tiempo. | Para flujos complejos que cruzan múltiples clases. |
+| **Estados** | Muestra los estados posibles de un objeto y las transiciones entre ellos. | Cuando un objeto tiene ciclo de vida (borrador → completo → cerrado). |
+| **Actividad** | Muestra pasos de un proceso y decisiones. | Para representar algoritmos o flujos de negocio. |
+| **Componentes** | Muestra la estructura técnica del sistema (módulos, librerías). | Para arquitectura de software. |
+
+En esta sección nos enfocamos en **Diagrama de Clases**, que es el más importante para modelar la lógica del sistema.
+
+---
+
+## 2.4. Diagrama de Clases UML para TamboTrace
+
+### ¿Qué es una clase en UML?
+
+Una **clase** es una plantilla que define la estructura y comportamiento de los objetos en un programa. Cada clase tiene:
+
+- **Atributos**: datos que guarda.
+- **Métodos**: acciones que puede realizar.
+
+En UML, una clase se representa con un rectángulo dividido en tres secciones:
+
+```
+┌─────────────────────────────┐
+│ Nombre de la clase          │
+├─────────────────────────────┤
+│ Atributos                   │
+│ - atributo1: tipo           │
+│ - atributo2: tipo           │
+├─────────────────────────────┤
+│ Métodos                     │
+│ + método1(): tipo           │
+│ + método2(param): tipo      │
+└─────────────────────────────┘
+```
+
+**Notación:**
+- El signo `+` indica un método o atributo público (accesible desde afuera).
+- El signo `-` indica privado (solo accesible dentro de la clase).
+- El signo `#` indica protegido (accesible en la clase y sus subclases).
+
+### Diagrama de Clases de TamboTrace
+
+```
+┌─────────────────────────────────┐
+│         Usuario                 │
+├─────────────────────────────────┤
+│ - id: int                       │
+│ - nombre: String                │
+│ - email: String                 │
+│ - rol: Rol (enum)               │
+│ - activo: boolean               │
+├─────────────────────────────────┤
+│ + getId(): int                  │
+│ + getNombre(): String           │
+│ + setNombre(String): void       │
+│ + validarCredenciales(): bool   │
+│ + asignarRol(Rol): void         │
+│ + desactivar(): void            │
+└─────────────────────────────────┘
+            ▲
+            │ hereda
+            │
+┌──────────────────────────────────────────────────────────────────┐
+│                                                                  │
+│  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐
+│  │   Administrador  │  │   Encargado      │  │    Operario      │
+│  ├──────────────────┤  ├──────────────────┤  ├──────────────────┤
+│  │ - permisos: []   │  │ - sector: String │  │ - turno: String  │
+│  ├──────────────────┤  ├──────────────────┤  ├──────────────────┤
+│  │ + crearUsuario() │  │ + registrarVaca()│  │ + cargarOrdeñe() │
+│  │ + verHistorial() │  │ + cerrarLote()   │  │ + seleccVacas()  │
+│  └──────────────────┘  └──────────────────┘  └──────────────────┘
+
+        ┌─────────────────────────────┐
+        │        Vaca                 │
+        ├─────────────────────────────┤
+        │ - caravana: String (PK)     │
+        │ - nombre: String            │
+        │ - raza: Raza                │
+        │ - fechaNacimiento: Date     │
+        │ - estado: EstadoVaca (enum) │
+        │ - observaciones: String     │
+        ├─────────────────────────────┤
+        │ + getCaravana(): String     │
+        │ + getEstado(): EstadoVaca   │
+        │ + cambiarEstado(Enum): void │
+        │ + puedeParticipar(): bool   │
+        │ + registrarTratamiento(): v │
+        └─────────────────────────────┘
+                │ 1
+                │ pertenece a
+                │ N
+                ▼
+        ┌──────────────────────┐
+        │       Raza           │
+        ├──────────────────────┤
+        │ - id: int (PK)       │
+        │ - nombre: String     │
+        │ - descripción: String│
+        ├──────────────────────┤
+        │ + getNombre(): String│
+        │ + getCaracterísticas()
+        └──────────────────────┘
+
+        ┌──────────────────────────────┐
+        │       Ordeñe                 │
+        ├──────────────────────────────┤
+        │ - id: int (PK)               │
+        │ - fecha: Date                │
+        │ - turno: Turno (enum)        │
+        │ - responsable: Usuario       │
+        │ - tanque: Tanque             │
+        │ - observaciones: String      │
+        ├──────────────────────────────┤
+        │ + getId(): int               │
+        │ + agregarVaca(Vaca): void    │
+        │ + excluirVaca(Vaca, mot): v  │
+        │ + generarLote(): Lote        │
+        │ + getVacasParticipantes(): []│
+        │ + validar(): bool            │
+        └──────────────────────────────┘
+                  │ 1
+                  │ genera
+                  │ 1
+                  ▼
+        ┌────────────────────────────────┐
+        │         Lote                   │
+        ├────────────────────────────────┤
+        │ - id: int (PK)                 │
+        │ - ordeñe: Ordeñe               │
+        │ - litrosEstimados: decimal     │
+        │ - temperatura: decimal         │
+        │ - grasa: decimal               │
+        │ - proteína: decimal            │
+        │ - célulasSomáticas: int        │
+        │ - antibióticos: String         │
+        │ - estado: EstadoLote (enum)    │
+        │ - fechaCierre: Date            │
+        │ - usuarioCierre: Usuario       │
+        │ - vacas: List<Vaca>            │
+        │ - vacasExcluidas: List<Vaca>   │
+        ├────────────────────────────────┤
+        │ + getId(): int                 │
+        │ + agregarPropiedad(prop, val)  │
+        │ + puedeCerrarse(): bool        │
+        │ + cerrar(): void               │
+        │ + getEstado(): EstadoLote      │
+        │ + getTrazabilidad(): String    │
+        │ + generarReporte(): PDF        │
+        │ + registrarCambio(Cambio): v   │
+        │ + validarIntegridad(): bool    │
+        └────────────────────────────────┘
+                  │
+                  │ registra cambios en
+                  ▼
+        ┌────────────────────────────────┐
+        │  HistorialCambios              │
+        ├────────────────────────────────┤
+        │ - id: int (PK)                 │
+        │ - lote: Lote                   │
+        │ - usuario: Usuario             │
+        │ - tipoC ambio: String          │
+        │ - valorAnterior: String        │
+        │ - valorNuevo: String           │
+        │ - fecha: Timestamp             │
+        ├────────────────────────────────┤
+        │ + registrar(): void            │
+        │ + getDescripción(): String     │
+        └────────────────────────────────┘
+
+        ┌────────────────────────┐
+        │       Tanque           │
+        ├────────────────────────┤
+        │ - id: int (PK)         │
+        │ - número: String       │
+        │ - ubicación: String    │
+        │ - capacidad: int       │
+        ├────────────────────────┤
+        │ + getCapacidad(): int  │
+        │ + estaDisponible(): b  │
+        └────────────────────────┘
+```
+
+### Explicación de las relaciones entre clases
+
+#### Relación de Herencia
+
+La clase **Usuario** tiene tres subclases especializadas: **Administrador**, **Encargado** y **Operario**. La herencia significa que:
+
+- Cada subclase *hereda* todos los atributos y métodos de Usuario.
+- Cada subclase puede tener atributos y métodos propios adicionales.
+- Cada subclase implementa la interfaz de Usuario pero con comportamiento específico.
+
+**En código (pseudocódigo):**
+
+```javascript
+class Usuario {
+  constructor(nombre, email, rol) {
+    this.nombre = nombre;
+    this.email = email;
+    this.rol = rol;
+  }
+  desactivar() { /* ... */ }
+}
+
+class Operario extends Usuario {
+  constructor(nombre, email, turno) {
+    super(nombre, email, "operario");
+    this.turno = turno;
+  }
+  cargarOrdeñe(ordeñe) { /* ... */ }
+  seleccionarVacas(vacas) { /* ... */ }
+}
+```
+
+#### Asociaciones uno a muchos
+
+- **Vaca → Raza (N:1)**: Muchas vacas pertenecen a una raza.
+- **Ordeñe → Lote (1:1)**: Un ordeñe genera un lote.
+- **Lote → HistorialCambios (1:N)**: Un lote puede tener múltiples registros de cambios.
+
+#### Composición y agregación
+
+- **Ordeñe contiene Vacas**: Un ordeñe tiene una lista de vacas que participan.
+- **Lote contiene propiedades**: temperatura, grasa, etc., que le pertenecen completamente.
+
+### Métodos principales de TamboTrace
+
+#### Clase Vaca
+
+```javascript
+class Vaca {
+  puedeParticipar() {
+    // Responde a la lógica del árbol de decisión de la Sección 1.7
+    if (this.estado === "baja" || this.estado === "secado") {
+      return false;
+    }
+    if (this.estado === "tratamiento") {
+      // Depende de si hay exclusión documentada
+      return null; // Requiere exclusión explícita
+    }
+    return this.estado === "en_producción";
+  }
+}
+```
+
+#### Clase Lote
+
+```javascript
+class Lote {
+  puedeCerrarse() {
+    // Responde al árbol de decisión de cierre de lote
+    if (this.estado === "cerrado") {
+      throw new Error("Lote ya cerrado");
+    }
+    if (!this.litrosEstimados) {
+      throw new Error("Faltan litros estimados");
+    }
+    if (this.vacas.length === 0) {
+      throw new Error("No hay vacas participantes");
+    }
+    return true;
+  }
+
+  cerrar(usuario) {
+    if (!this.puedeCerrarse()) return;
+    
+    this.estado = "cerrado";
+    this.fechaCierre = new Date();
+    this.usuarioCierre = usuario;
+    
+    // Registra el cambio en el historial (RF15)
+    this.registrarCambio({
+      tipo: "cierre",
+      usuario: usuario,
+      fecha: new Date()
+    });
+  }
+
+  getTrazabilidad() {
+    // Responde a RF12
+    return {
+      fecha: this.ordeñe.fecha,
+      turno: this.ordeñe.turno,
+      responsable: this.ordeñe.responsable.nombre,
+      vacasIncluidas: this.vacas,
+      vacasExcluidas: this.vacasExcluidas,
+      propiedades: {
+        litros: this.litrosEstimados,
+        temperatura: this.temperatura,
+        grasa: this.grasa,
+        proteína: this.proteína,
+        antibióticos: this.antibióticos
+      }
+    };
+  }
+}
+```
+
+#### Clase Ordeñe
+
+```javascript
+class Ordeñe {
+  agregarVaca(vaca) {
+    if (!vaca.puedeParticipar()) {
+      throw new Error("Vaca no puede participar");
+    }
+    this.vacas.push(vaca);
+  }
+
+  excluirVaca(vaca, motivo) {
+    // Implementa RF7
+    this.vacas.remove(vaca);
+    this.vacasExcluidas.push({
+      vaca: vaca,
+      motivo: motivo,
+      fecha: new Date()
+    });
+  }
+
+  generarLote() {
+    // Implementa RF8
+    if (this.vacas.length === 0) {
+      throw new Error("No hay vacas en el ordeñe");
+    }
+    
+    let lote = new Lote();
+    lote.ordeñe = this;
+    lote.vacas = this.vacas;
+    lote.vacasExcluidas = this.vacasExcluidas;
+    return lote;
+  }
+}
+```
+
+### Correspondencia entre MER, UML y Código
+
+Es importante entender que:
+
+- El **MER** define la estructura de la base de datos (tablas, columnas, relaciones).
+- El **Diagrama de Clases UML** define la estructura del código (clases, atributos, métodos).
+- Una clase UML generalmente corresponde a una tabla del MER.
+- Un atributo en UML corresponde a una columna en la tabla.
+- Una relación en UML corresponde a una clave foránea en la base de datos.
+
+**Ejemplo:**
+
+| Aspecto | MER | UML | Base de Datos |
+|---|---|---|---|
+| **Concepto** | Entidad VACA | Clase Vaca | Tabla VACA |
+| **Propiedad** | Atributo caravana | Atributo caravana: String | Columna caravana VARCHAR(10) |
+| **Relación** | VACA → RAZA (N:1) | Atributo raza: Raza | FK raza_id INT |
+
+Cuando el equipo desarrollador programa, generalmente:
+
+1. Diseña el MER (estructura de datos).
+2. Diseña el Diagrama de Clases UML (estructura de código).
+3. Crea la base de datos basada en el MER.
+4. Escribe clases basadas en el UML.
+5. Usa ORM u mapeadores para conectar clases con tablas.
+
+---
+
+## 2.5. Diagrama de Casos de Uso de TamboTrace
+
+### ¿Qué es un caso de uso?
+
+Un **caso de uso** es una descripción de una secuencia de acciones que un usuario realiza en el sistema para lograr un objetivo. Responde a la pregunta: *¿qué puede hacer alguien con el sistema?*
+
+Los casos de uso son directamente derivados de los requerimientos funcionales (RF1 a RF15).
+
+### Notación de Casos de Uso
+
+```
+┌────────────────────┐
+│  Nombre del actor  │ (usuario del sistema)
+└────────────────────┘
+       │ interactúa
+       │
+       ▼
+┌──────────────────────────────────────┐
+│                                      │
+│       Sistema TamboTrace            │
+│                                      │
+│  ┌──────────────────────────────┐   │
+│  │   Caso de Uso (acción)       │   │
+│  │   - Registrar vaca           │   │
+│  │   - Crear ordeñe             │   │
+│  │   - Generar reporte          │   │
+│  └──────────────────────────────┘   │
+│                                      │
+└──────────────────────────────────────┘
+```
+
+### Diagrama de Casos de Uso de TamboTrace
+
+```
+                    ┌─────────────────────────┐
+                    │   Administrador         │
+                    │   (Sr. Roldán)          │
+                    └────────────┬────────────┘
+                                 │
+                    ┌────────────┤
+                    │            │
+                    ▼            ▼
+              ┌──────────┐  ┌────────────────┐
+              │ Gestionar│  │ Ver Historial  │
+              │ Usuarios │  │ de Cambios     │
+              └──────────┘  └────────────────┘
+
+              ┌─────────────────────────┐
+              │   Encargado de Tambo    │
+              │   (Carlos Cáceres)      │
+              └────────────┬────────────┘
+                           │
+         ┌─────────────────┼─────────────────┐
+         │                 │                 │
+         ▼                 ▼                 ▼
+    ┌──────────┐    ┌─────────────┐    ┌──────────┐
+    │Registrar │    │Registrar    │    │Crear     │
+    │Vacas     │    │Ordeñes      │    │Lotes     │
+    └──────────┘    └─────────────┘    └──────────┘
+         │                 │                 │
+         ▼                 ▼                 ▼
+    ┌──────────┐    ┌─────────────┐    ┌──────────┐
+    │Buscar    │    │Seleccionar  │    │Cerrar    │
+    │Vacas     │    │Vacas        │    │Lotes     │
+    └──────────┘    └─────────────┘    └──────────┘
+                          │
+                          ▼
+                    ┌─────────────┐
+                    │Excluir      │
+                    │Vacas        │
+                    └─────────────┘
+
+              ┌─────────────────────────┐
+              │   Operario de Ordeñe    │
+              │   (Lucía Echera)        │
+              └────────────┬────────────┘
+                           │
+         ┌─────────────────┴──────────────────┐
+         │                                    │
+         ▼                                    ▼
+    ┌──────────────┐               ┌────────────────┐
+    │Cargar Ordeñe │◄─────────────►│Seleccionar     │
+    │             │  (se hace en  │Vacas que       │
+    │(desde campo) │   el campo)    │participan      │
+    └──────────────┘               └────────────────┘
+
+              ┌──────────────────────────┐
+              │   Veterinario            │
+              │   (Sin nombre)           │
+              └────────┬─────────────────┘
+                       │
+         ┌─────────────┴─────────────┐
+         │                           │
+         ▼                           ▼
+    ┌──────────────┐        ┌──────────────┐
+    │Consultar     │        │Cargar datos  │
+    │Datos         │        │sanitarios    │
+    │Sanitarios    │        │              │
+    └──────────────┘        └──────────────┘
+
+              ┌──────────────────────────────┐
+              │  Todos los usuarios pueden:  │
+              │  (roles anteriores)          │
+              └────────────────┬─────────────┘
+                               │
+         ┌─────────────────────┼──────────────────────┐
+         │                     │                      │
+         ▼                     ▼                      ▼
+    ┌──────────────┐  ┌──────────────────┐  ┌─────────────┐
+    │Iniciar       │  │Consultar         │  │Generar      │
+    │Sesión        │  │Trazabilidad      │  │Reportes     │
+    │(RFC1)        │  │de Lotes (RF12)   │  │(RF14)       │
+    └──────────────┘  └──────────────────┘  └─────────────┘
+```
+
+### Especificación de un caso de uso
+
+Cada caso de uso se especifica con:
+
+**Caso de Uso: Cerrar Lote** (corresponde a RF11)
+
+| Aspecto | Descripción |
+|---|---|
+| **Nombre** | Cerrar Lote |
+| **Actores** | Administrador, Encargado |
+| **Precondiciones** | El lote existe, está en estado COMPLETO, el usuario está autenticado. |
+| **Flujo principal** | 1. El usuario selecciona un lote.<br>2. El sistema verifica que tenga datos obligatorios (litros, vacas).<br>3. El usuario confirma el cierre.<br>4. El sistema cierra el lote, asigna fecha y usuario de cierre.<br>5. El sistema registra el cambio en el historial (RF15).<br>6. El sistema muestra confirmación. |
+| **Flujos alternativos** | Si el lote ya está cerrado: mostrar advertencia.<br>Si faltan datos: mostrar campo faltante y no permitir cierre. |
+| **Postcondiciones** | El lote está cerrado, no puede modificarse, se registró en el historial. |
+
+---
+
 ## Síntesis final
 
-A lo largo de este documento se aplicaron al proyecto TamboTrace los conceptos fundamentales del análisis de requerimientos. A modo de síntesis:
+A lo largo de este documento se aplicaron al proyecto TamboTrace los conceptos fundamentales del análisis de requerimientos, modelado de datos y diseño orientado a objetos. A modo de síntesis:
 
 | Concepto | Aplicación en TamboTrace |
 |---|---|
