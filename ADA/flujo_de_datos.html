@@ -77,6 +77,12 @@
     .method-rule strong { color:#543a09; }
     .section-head { display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap; }
     .section-head p { color:var(--muted); font-size:.93rem; }
+    .login-example { margin:38px 0; }
+    .example-figure { margin:0; padding:18px; background:var(--card); border:1px solid var(--line); border-radius:20px; box-shadow:var(--shadow); }
+    .example-figure a { display:block; max-width:900px; margin:auto; border-radius:13px; overflow:hidden; }
+    .example-figure img { display:block; width:100%; height:auto; }
+    .example-figure figcaption { max-width:900px; margin:15px auto 0; color:var(--muted); font-size:.91rem; }
+    .example-figure figcaption strong { color:var(--ink); }
     .surface { padding:25px; }
     .flow-label { display:flex; align-items:center; gap:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.11em; font-size:.75rem; font-weight:800; margin-bottom:13px; }
     .flow-label::after { content:""; flex:1; height:1px; background:var(--line); }
@@ -184,6 +190,14 @@
         </div>
         <div class="method-rule"><strong>Ejemplo:</strong> el clic ocurre ✓ → Network muestra <code>404</code> → el servidor tiene otra ruta → corrige la URL del frontend y vuelve a probar.</div>
       </div>
+    </section>
+
+    <section class="login-example" aria-labelledby="login-example-title">
+      <div class="section-head"><h2 id="login-example-title">Ejemplo práctico: flujo de un formulario de login</h2><p>Del dato escrito por el usuario hasta la respuesta que actualiza la interfaz</p></div>
+      <figure class="example-figure">
+        <a href="ejemplo_flujo_datos.png" aria-label="Abrir la infografía del flujo de login en tamaño completo"><img src="ejemplo_flujo_datos.png" width="1024" height="1536" loading="lazy" decoding="async" alt="Infografía del flujo de un login: el formulario HTML y JavaScript envía email y contraseña por POST en formato JSON; Python valida los datos, consulta MySQL de forma parametrizada, compara el hash y devuelve una respuesta HTTP que el frontend muestra al usuario."></a>
+        <figcaption><strong>Cómo leer el ejemplo:</strong> sigue los números desde el formulario hasta MySQL y luego acompaña la respuesta de regreso. La franja inferior resume cada transformación y propone una secuencia para diagnosticar fallos. Pulsa la imagen para verla en tamaño completo.</figcaption>
+      </figure>
     </section>
 
     <section aria-labelledby="flow-title">
