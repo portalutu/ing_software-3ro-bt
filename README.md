@@ -6,7 +6,7 @@ Repositorio de apoyo para Ingeniería de Software de 3.º de Bachillerato Tecnol
 
 **[portalutu.github.io/ing_software-3ro-bt](https://portalutu.github.io/ing_software-3ro-bt/)**
 
-La portada es estática, adaptable a celulares y no requiere compilación. Incluye una ruta de estudio, búsqueda, filtros por tipo y acceso directo a los recursos interactivos.
+La portada es estática, adaptable a celulares y no requiere compilación. Incluye una ruta de estudio, materiales agrupados por tipo, tema claro/oscuro y acceso directo a los recursos interactivos.
 
 ## Recorrido sugerido
 
@@ -48,12 +48,15 @@ necesidad → entrevista → requerimientos → modelado → historias → backl
 - [Eventos de Scrum](Teoricos/scrum-events.md)
 - [Especificación de requerimientos y UML](Teoricos/ADA.md)
 
-### ADA y prácticos
+### Prácticos
 
-- [Análisis de TamboTrace](ADA/analisis.md)
 - [Guía de análisis y diseño de aplicaciones](ADA/guia_analisis_disenio_apps.md)
 - [Flujo de datos interactivo](ADA/flujo_de_datos.html)
 - [Juego de roles](Practicos/juego_roles_relevamiento_requerimientos_3_emt.md)
+
+### Caso de ejemplo: TamboTrace
+
+- [Análisis de TamboTrace](ADA/analisis.md)
 - [Proyecto Scrum de trazabilidad lechera](Practicos/proyecto_scrum_trazabilidad_lechera.md)
 - [Modelado UML y MER](Practicos/ada-tambotrace.md)
 - [Base de datos MySQL](Practicos/ada-tambotrace-mysql.md)
@@ -67,7 +70,6 @@ necesidad → entrevista → requerimientos → modelado → historias → backl
 - [Manual de Git](documentos/manual_git_v2.md)
 - [Ayuda rápida de Git y GitHub](documentos/git-gh-cheatsheet.md)
 - [App a lo Vestia](Eval/app_a_lo_vestia.html) y su [corrección](Eval/app_a_lo_vestia_correccion.md)
-- [Presentación](Premios-Nodo/presentacion_proyecto.md) y [guion](Premios-Nodo/guion_video_tambotrace.md) de TamboTrace
 
 ## Archivo de versiones anteriores
 
@@ -85,6 +87,6 @@ El repositorio está preparado para publicarse directamente desde `main`:
 
 ## Mantenimiento
 
-- Incorporar cada material nuevo a `index.html` para que aparezca en la búsqueda.
+- Incorporar cada material nuevo al grupo correspondiente de `index.html`.
 - Mover a `old/` solo una versión reemplazada por otra más completa o actual.
 - Comprobar enlaces y vista móvil antes de publicar.
