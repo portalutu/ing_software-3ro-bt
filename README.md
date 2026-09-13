@@ -1,148 +1,90 @@
-# Ingeniería de Software - 3º Año EMT (2026)
+# Ingeniería de Software · 3.º BT (2026)
 
-Repositorio de apoyo para la materia, pensado para centralizar materiales teóricos, prácticos, plantillas de trabajo y documentos de referencia para proyectos de software.
+Repositorio de apoyo para Ingeniería de Software de 3.º de Bachillerato Tecnológico. Reúne teoría, actividades, casos aplicados, recursos y documentación para los proyectos del curso.
 
-## Objetivo
+## Sitio del curso
 
-Este repositorio reúne en un solo lugar:
+**[portalutu.github.io/ing_software-3ro-bt](https://portalutu.github.io/ing_software-3ro-bt/)**
 
-- material teórico para clase;
-- actividades prácticas listas para usar;
-- plantillas para documentar proyectos;
-- documentos de apoyo sobre Git, Markdown y gestión de proyectos;
-- ejemplos que conectan relevamiento, requerimientos, historias de usuario, backlog y sprint planning.
+La portada es estática, adaptable a celulares y no requiere compilación. Incluye una ruta de estudio, búsqueda, filtros por tipo y acceso directo a los recursos interactivos.
 
-## Estructura del repositorio
+## Recorrido sugerido
+
+1. [Introducción a la gestión de proyectos](Teoricos/Introducción%20a%20la%20Gestión%20de%20Proyectos.md)
+2. [Entrevistas y relevamiento](Teoricos/entrevistas.md)
+3. [Especificación de requerimientos y UML](Teoricos/ADA.md)
+4. [Análisis aplicado de TamboTrace](ADA/analisis.md)
+5. [Historias de usuario](Teoricos/user-stories.md)
+6. [Backlog de producto](Teoricos/backlog.md)
+7. [Planificación del sprint](Teoricos/sprint-planning.md)
+8. [Kit completo de documentación](documentos/Project_Management_Templates_full.md)
+
+```text
+necesidad → entrevista → requerimientos → modelado → historias → backlog → sprint → documentación
+```
+
+## Organización
 
 ```text
 .
-├── README.md
-├── Teoricos/
-│   ├── Introducción a la Gestión de Proyectos.md
-│   ├── agile.md
-│   ├── waterfall.md
-│   ├── entrevistas.md
-│   ├── user-stories.md
-│   ├── backlog.md
-│   ├── sprint-planning.md
-│   ├── scrum-events.md
-│   └── ADA.md
-├── ADA/
-│   └── analisis.md
-├── Practicos/
-│   ├── juego_roles_relevamiento_requerimientos_3_emt.md
-│   └── proyecto_scrum_trazabilidad_lechera.md
-├── Templates/
-│   ├── 01_project_charter.md
-│   ├── 02_stakeholders.md
-│   ├── 03_scope.md
-│   ├── 04_wbs.md
-│   ├── 05_schedule.md
-│   ├── 06_risk_register.md
-│   ├── 07_communication_plan.md
-│   ├── 08_requirements.md
-│   ├── 09_backlog.md
-│   ├── 10_sprint_plan.md
-│   ├── 11_architecture.md
-│   ├── 12_test_plan.md
-│   └── 13_final_report.md
-└── Documentos/
-    ├── Project_Management_Templates_full.md
-    ├── manual_estilo_markdown.md
-    ├── manual_git_v2.md
-    └── imgs/
+├── index.html              # Portada de GitHub Pages
+├── Teoricos/               # Conceptos y guías de estudio
+├── ADA/                    # Análisis aplicado y recurso interactivo
+├── Practicos/              # Actividades y proyecto TamboTrace
+├── documentos/             # Kit de plantillas y manuales
+├── Eval/                   # Evaluación y corrección
+├── Premios-Nodo/           # Presentación y guion
+└── old/                    # Versiones incompletas archivadas
 ```
 
-## Contenido principal
+### Teóricos
 
-### `Teoricos/`
+- [Gestión de proyectos](Teoricos/Introducción%20a%20la%20Gestión%20de%20Proyectos.md)
+- [Agile](Teoricos/agile.md) y [Waterfall](Teoricos/waterfall.md)
+- [Entrevistas](Teoricos/entrevistas.md)
+- [Historias de usuario](Teoricos/user-stories.md)
+- [Backlog](Teoricos/backlog.md)
+- [Sprint Planning](Teoricos/sprint-planning.md)
+- [Eventos de Scrum](Teoricos/scrum-events.md)
+- [Especificación de requerimientos y UML](Teoricos/ADA.md)
 
-Material conceptual y didáctico para trabajar los temas principales de la materia.
+### ADA y prácticos
 
-- [Introducción a la Gestión de Proyectos](Teoricos/Introducción%20a%20la%20Gestión%20de%20Proyectos.md): conceptos iniciales de gestión de proyectos.
-- [agile.md](Teoricos/agile.md): introducción al enfoque ágil.
-- [waterfall.md](Teoricos/waterfall.md): introducción al enfoque en cascada.
-- [entrevistas.md](Teoricos/entrevistas.md): relevamiento de requerimientos mediante entrevistas, con casos de ejemplo.
-- [user-stories.md](Teoricos/user-stories.md): redacción de historias de usuario y criterios de aceptación.
-- [backlog.md](Teoricos/backlog.md): transformación de requerimientos en historias y backlog.
-- [sprint-planning.md](Teoricos/sprint-planning.md): planificación de sprint con ejemplo aplicado.
-- [scrum-events.md](Teoricos/scrum-events.md): eventos principales de Scrum y su propósito.
-- [ADA.md](Teoricos/ADA.md): documento teórico completo sobre especificación de requerimientos (IEEE 830, tipos, ciclo de vida, usuarios, stakeholders, técnicas de relevamiento, factibilidades, lógica del sistema) y modelado de sistemas con UML (modelo esencial, diagramas de casos de uso, clases, secuencia, actividad y navegabilidad).
+- [Análisis de TamboTrace](ADA/analisis.md)
+- [Guía de análisis y diseño de aplicaciones](ADA/guia_analisis_disenio_apps.md)
+- [Flujo de datos interactivo](ADA/flujo_de_datos.html)
+- [Juego de roles](Practicos/juego_roles_relevamiento_requerimientos_3_emt.md)
+- [Proyecto Scrum de trazabilidad lechera](Practicos/proyecto_scrum_trazabilidad_lechera.md)
+- [Modelado UML y MER](Practicos/ada-tambotrace.md)
+- [Base de datos MySQL](Practicos/ada-tambotrace-mysql.md)
+- [Entorno Docker](Practicos/ada-tambotrace-docker.md)
+- [Project Charter](Practicos/ada-tambotrace-project-charter.md)
 
-### `ADA/`
+### Recursos y evaluación
 
-Documentos de análisis aplicado que toman el proyecto TamboTrace como caso de estudio.
+- [Kit completo de documentación](documentos/Project_Management_Templates_full.md)
+- [Manual de Markdown](documentos/manual_estilo_markdown.md)
+- [Manual de Git](documentos/manual_git_v2.md)
+- [Ayuda rápida de Git y GitHub](documentos/git-gh-cheatsheet.md)
+- [App a lo Vestia](Eval/app_a_lo_vestia.html) y su [corrección](Eval/app_a_lo_vestia_correccion.md)
+- [Presentación](Premios-Nodo/presentacion_proyecto.md) y [guion](Premios-Nodo/guion_video_tambotrace.md) de TamboTrace
 
-- [analisis.md](ADA/analisis.md): análisis de requerimientos completo del sistema TamboTrace (trazabilidad de producción lechera). Aplica directamente sobre un proyecto real cada concepto teórico de `Teoricos/ADA.md`: requerimientos funcionales y no funcionales, ciclo de vida, usuarios, stakeholders, técnicas de relevamiento, factibilidades y lógica del sistema con árboles y tablas de decisión.
+## Archivo de versiones anteriores
 
-### `Practicos/`
+Las 13 plantillas individuales de `templates/` duplicaban secciones del kit completo y ofrecían menos contexto. Se conservaron en [`old/Templates/`](old/Templates/) para mantener el historial. Para las actividades nuevas se debe utilizar el [kit consolidado](documentos/Project_Management_Templates_full.md), que reúne plantillas, ejemplos y una estructura recomendada de entrega.
 
-Actividades y casos de trabajo para aplicar los conceptos en clase.
+## Publicación con GitHub Pages
 
-- [juego_roles_relevamiento_requerimientos_3_emt.md](Practicos/juego_roles_relevamiento_requerimientos_3_emt.md): dinámica de entrevista con clientes ficticios para practicar relevamiento de requerimientos, identificación de usuarios, stakeholders, restricciones y riesgos.
-- [proyecto_scrum_trazabilidad_lechera.md](Practicos/proyecto_scrum_trazabilidad_lechera.md): proyecto didáctico completo basado en Scrum, con entrevista ficticia, análisis de requerimientos y trazabilidad aplicada a un establecimiento lechero.
+El repositorio está preparado para publicarse directamente desde `main`:
 
-### `Templates/`
+1. Abrir **Settings → Pages** en GitHub.
+2. En **Build and deployment**, elegir **Deploy from a branch**.
+3. Seleccionar `main`, la carpeta `/ (root)` y guardar.
 
-Plantillas separadas para usar durante el desarrollo de proyectos del curso.
+`.nojekyll` indica que el contenido se publica tal como está e `index.html` funciona como portada. Los documentos Markdown se abren renderizados en GitHub; los recursos HTML se ejecutan dentro del sitio.
 
-- [01_project_charter.md](Templates/01_project_charter.md): acta o definición inicial del proyecto.
-- [02_stakeholders.md](Templates/02_stakeholders.md): identificación de actores interesados.
-- [03_scope.md](Templates/03_scope.md): definición de alcance.
-- [04_wbs.md](Templates/04_wbs.md): estructura de desglose del trabajo.
-- [05_schedule.md](Templates/05_schedule.md): planificación temporal.
-- [06_risk_register.md](Templates/06_risk_register.md): registro de riesgos.
-- [07_communication_plan.md](Templates/07_communication_plan.md): plan de comunicación.
-- [08_requirements.md](Templates/08_requirements.md): relevamiento y documentación de requerimientos.
-- [09_backlog.md](Templates/09_backlog.md): backlog del producto.
-- [10_sprint_plan.md](Templates/10_sprint_plan.md): planificación de sprint.
-- [11_architecture.md](Templates/11_architecture.md): arquitectura de la solución.
-- [12_test_plan.md](Templates/12_test_plan.md): plan de pruebas.
-- [13_final_report.md](Templates/13_final_report.md): informe final del proyecto.
+## Mantenimiento
 
-### `Documentos/`
-
-Material de apoyo complementario.
-
-- [Project_Management_Templates_full.md](Documentos/Project_Management_Templates_full.md): compilado general de plantillas y ejemplos.
-- [manual_estilo_markdown.md](Documentos/manual_estilo_markdown.md): pautas para redactar entregables en Markdown.
-- [manual_git_v2.md](Documentos/manual_git_v2.md): guía práctica de Git para el curso.
-- `Documentos/imgs/`: imágenes de apoyo utilizadas por la documentación.
-
-## Recorrido sugerido para estudiantes
-
-Un recorrido posible para usar este repositorio durante el curso es:
-
-1. Leer los conceptos generales en `Teoricos/`.
-2. Entender cómo entrevistar al cliente en [entrevistas.md](Teoricos/entrevistas.md).
-3. Estudiar la especificación de requerimientos y el modelado de sistemas en [ADA.md](Teoricos/ADA.md).
-4. Ver cómo se aplica todo eso en un proyecto real leyendo [ADA/analisis.md](ADA/analisis.md).
-5. Practicar el relevamiento con el juego de roles de `Practicos/`.
-6. Convertir necesidades en historias de usuario con [user-stories.md](Teoricos/user-stories.md).
-7. Armar y priorizar el producto con [backlog.md](Teoricos/backlog.md).
-8. Planificar una iteración con [sprint-planning.md](Teoricos/sprint-planning.md).
-9. Usar las plantillas de `Templates/` para documentar el proyecto real.
-10. Consultar `Documentos/` cuando se necesiten guías de escritura, Markdown o Git.
-
-## Relación entre materiales
-
-Los materiales están pensados para mostrar una secuencia de trabajo:
-
-```text
-entrevista del cliente -> requerimientos (IEEE 830) -> modelado UML -> historias de usuario -> backlog -> sprint planning -> documentación del proyecto
-```
-
-`Teoricos/ADA.md` cubre el tramo de requerimientos y modelado con teoría general. `ADA/analisis.md` lo recorre de nuevo aplicado al proyecto TamboTrace, mostrando cómo cada concepto se usa en la práctica. Juntos forman un par teoría–aplicación que complementa el resto de los materiales.
-
-Esta secuencia ayuda a que los estudiantes no vean cada artefacto como un documento aislado, sino como parte del proceso completo de desarrollo de software.
-
-## Uso recomendado en clase
-
-- Utilizar `Teoricos/` como base conceptual y de ejemplos.
-- Usar `Practicos/` para actividades guiadas, simulaciones y casos de aplicación.
-- Completar `Templates/` como documentación progresiva del proyecto de cada equipo.
-- Complementar con `Documentos/` cuando se necesiten guías prácticas de redacción o control de versiones.
-
-## Nota
-
-Este repositorio puede seguir creciendo con nuevos materiales teóricos, prácticos, casos de estudio, ejemplos de backlog y guías de trabajo para acompañar la materia durante el año. La carpeta `ADA/` está pensada para concentrar los análisis aplicados sobre proyectos concretos del curso.
+- Incorporar cada material nuevo a `index.html` para que aparezca en la búsqueda.
+- Mover a `old/` solo una versión reemplazada por otra más completa o actual.
+- Comprobar enlaces y vista móvil antes de publicar.

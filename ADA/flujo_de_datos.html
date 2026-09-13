@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="Diagrama interactivo para diagnosticar la comunicación entre frontend, API y base de datos.">
+  <title>Diagnóstico de comunicación Frontend ↔ Backend</title>
+  <script>
+    (() => {
+      try {
+        const choice = localStorage.getItem('diagnostico-tema');
+        document.documentElement.dataset.theme = choice === 'light' || choice === 'dark' ? choice : (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      } catch {
+        document.documentElement.dataset.theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+    })();
+  </script>
+  <style>
+    :root { color-scheme:light; --ink:#16233b; --muted:#53627b; --bg:#f4f7fc; --card:#fff; --line:#d9e2ef; --blue:#245eea; --blue-light:#eaf0ff; --green:#08775e; --shadow:0 12px 32px rgba(23,43,77,.07); --soft:#f6f8fd; --soft-blue:#f7faff; --soft-green:#f3faf9; --soft-green-line:#cce7e1; --code-bg:#eef2fa; --answer-bg:#eaf7f2; --answer-line:#b7e3d0; --answer-ink:#15513e; --button-active:#1649c3; --button-hover:#1648ba; }
+    :root[data-theme="dark"] { color-scheme:dark; --ink:#e9f0fc; --muted:#bac9df; --bg:#0c1527; --card:#17253c; --line:#38506e; --blue:#a6c3ff; --blue-light:#203b64; --green:#94e4c4; --shadow:0 12px 32px rgba(0,0,0,.22); --soft:#1d304d; --soft-blue:#203657; --soft-green:#1b403e; --soft-green-line:#40746a; --code-bg:#2d4263; --answer-bg:#19483c; --answer-line:#447f6c; --answer-ink:#d8f9e9; --button-active:#c3d6ff; --button-hover:#315fae; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,sans-serif; }
+    button { font:inherit; cursor:pointer; }
+    button:focus-visible, a:focus-visible { outline:3px solid #ef9d25; outline-offset:3px; }
+    .wrap { width:min(1200px,calc(100% - 36px)); margin:auto; }
+    header { background:linear-gradient(120deg,#132342,#193c74 65%,#145e72); color:#fff; padding:42px 0 48px; }
+    .eyebrow { letter-spacing:.13em; font-size:.77rem; font-weight:750; text-transform:uppercase; color:#a9dfec; }
+    h1 { max-width:850px; font-size:clamp(2rem,4vw,3.25rem); line-height:1.13; letter-spacing:-.035em; margin:13px 0; }
+    header p { max-width:790px; color:#dbe7f8; margin:0; font-size:1.08rem; }
+    .header-meta { display:flex; flex-wrap:wrap; gap:9px; margin-top:25px; }
+    .header-meta span { border:1px solid #ffffff55; border-radius:999px; padding:5px 12px; font-size:.86rem; }
+    .header-top { display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:12px; }
+    .theme-switch { display:flex; align-items:center; gap:4px; border:1px solid #ffffff66; border-radius:999px; padding:4px; background:#091b3699; }
+    .theme-switch button { display:grid; place-items:center; width:38px; height:38px; border:0; border-radius:999px; background:transparent; color:#ecf3ff; padding:0; }
+    .theme-switch svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+    .theme-switch button:hover { background:#ffffff27; }
+    .theme-switch button[aria-pressed="true"] { background:#fff; color:#14284d; }
+    main { padding:32px 0 72px; }
+    section { margin-bottom:32px; }
+    h2 { font-size:1.55rem; line-height:1.2; letter-spacing:-.025em; margin:0 0 13px; }
+    h3 { margin:0 0 8px; font-size:1.08rem; }
+    p { margin:0 0 12px; }
+    .intro, .surface, .inspector, .exercise, .guide { background:var(--card); border:1px solid var(--line); border-radius:20px; box-shadow:var(--shadow); }
+    .intro { padding:25px 28px; }
+    .intro p { max-width:960px; }
+    .concepts { display:grid; grid-template-columns:repeat(3,1fr); gap:15px; margin-top:20px; }
+    .concept { border-left:3px solid var(--blue); background:var(--soft); padding:12px 16px; border-radius:0 10px 10px 0; }
+    .concept p { color:var(--muted); margin:0; font-size:.91rem; }
+    .infographic { margin:38px 0; }
+    .infographic-heading { display:flex; justify-content:space-between; align-items:end; gap:16px; flex-wrap:wrap; margin-bottom:16px; }
+    .infographic-heading p { color:var(--muted); margin:0; }
+    .info-panel { border-radius:20px; padding:25px; color:#fff; background:#14284d; box-shadow:var(--shadow); overflow:hidden; }
+    .info-panel + .info-panel { margin-top:13px; }
+    .info-panel h3 { font-size:1.36rem; letter-spacing:-.02em; margin:0 0 5px; }
+    .info-panel p { color:#cbd9ed; margin:0; max-width:900px; }
+    .info-kicker { color:#8de5dd; font-weight:800; font-size:.73rem; text-transform:uppercase; letter-spacing:.12em; }
+    .data-lane { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:22px; margin:22px 0 12px; }
+    .info-step { position:relative; min-width:0; min-height:136px; border:1px solid #7191ba66; border-radius:14px; background:#203c69; color:#fff; padding:15px; text-align:left; transition:transform .15s,background .15s,border-color .15s; }
+    .info-step:not(:last-child)::after { content:'→'; position:absolute; left:calc(100% + 5px); top:46%; color:#84e1e2; font-size:1.42rem; font-weight:800; line-height:1; pointer-events:none; }
+    .info-step:hover,.method-step:hover { transform:translateY(-2px); border-color:#a9e9ee; background:#2c527f; }
+    .info-step.selected,.method-step.selected { background:#286b90!important; border-color:#a9e9ee!important; box-shadow:0 0 0 2px #a9e9ee55!important; }
+    .info-step .info-num { display:block; color:#8de5dd; font-size:.73rem; font-weight:800; text-transform:uppercase; margin-bottom:7px; }
+    .info-step strong { display:block; font-size:.99rem; line-height:1.25; }
+    .info-step small { display:block; color:#d8e6f5; font-size:.8rem; line-height:1.35; margin-top:8px; }
+    .flow-key { display:flex; align-items:center; gap:8px; flex-wrap:wrap; font-size:.81rem; color:#d3e4f5; }
+    .flow-key b { color:#8de5dd; }
+    .flow-key span { border:1px solid #7298b97d; padding:4px 9px; border-radius:999px; }
+    .method-panel { background:#153c50; }
+    .method-lane { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; margin:20px 0 16px; }
+    .method-step { min-width:0; min-height:123px; padding:14px; color:#fff; background:#215266; border:1px solid #78bbc266; border-radius:13px; text-align:left; transition:transform .15s,background .15s,border-color .15s; }
+    .method-step .method-num { display:inline-grid; place-items:center; width:26px; height:26px; border-radius:50%; color:#134558; background:#a8ece1; font-size:.81rem; font-weight:850; margin-bottom:7px; }
+    .method-step strong { display:block; font-size:.95rem; line-height:1.25; }
+    .method-step small { display:block; font-size:.79rem; color:#d3ecef; line-height:1.35; margin-top:6px; }
+    .method-rule { background:#fff4d5; color:#543a09; padding:11px 15px; border-radius:10px; font-size:.9rem; line-height:1.45; }
+    .method-rule strong { color:#543a09; }
+    .section-head { display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap; }
+    .section-head p { color:var(--muted); font-size:.93rem; }
+    .surface { padding:25px; }
+    .flow-label { display:flex; align-items:center; gap:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.11em; font-size:.75rem; font-weight:800; margin-bottom:13px; }
+    .flow-label::after { content:""; flex:1; height:1px; background:var(--line); }
+    .flow { display:grid; grid-template-columns:minmax(150px,1.15fr) minmax(115px,.85fr) minmax(150px,1.15fr) minmax(115px,.85fr) minmax(150px,1.15fr); gap:10px; align-items:stretch; }
+    .node, .edge, .return-step, .check, .scenario { border:1px solid var(--line); border-radius:14px; background:var(--card); text-align:left; color:var(--ink); transition:border-color .15s,background .15s,transform .15s,box-shadow .15s; }
+    .node:hover, .edge:hover, .return-step:hover, .check:hover, .scenario:hover { border-color:#84a7fa; transform:translateY(-2px); box-shadow:0 6px 15px #234a9c13; }
+    .selected { border-color:var(--blue)!important; background:var(--blue-light)!important; box-shadow:0 0 0 2px #245eea20!important; }
+    .node { padding:17px; min-height:157px; display:flex; flex-direction:column; }
+    .tag { display:block; color:var(--blue); font-size:.72rem; font-weight:800; text-transform:uppercase; letter-spacing:.08em; margin-bottom:6px; }
+    .node strong { font-size:1.15rem; }
+    .node small, .edge small, .return-step small { display:block; font-size:.86rem; color:var(--muted); line-height:1.35; }
+    code { font: .84em ui-monospace,SFMono-Regular,Consolas,monospace; background:var(--code-bg); color:var(--ink); border-radius:5px; padding:2px 5px; overflow-wrap:anywhere; }
+    .method-rule code { background:#e7d9af; color:#432e0a; }
+    .node code { margin-top:auto; align-self:flex-start; }
+    .edge { min-height:157px; display:flex; align-items:center; justify-content:center; flex-direction:column; text-align:center; padding:12px; background:var(--soft-blue); }
+    .arrow { font-size:2rem; color:var(--blue); font-weight:700; line-height:1; }
+    .edge strong { margin:5px 0; font-size:.96rem; }
+    .return-flow { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+    .return-step { padding:14px; min-height:95px; background:var(--soft-green); border-color:var(--soft-green-line); }
+    .return-step .tag { color:var(--green); }
+    .return-step strong { display:block; }
+    .return-step small { margin-top:4px; }
+    .legend { margin-top:15px; color:var(--muted); font-size:.86rem; }
+    .inspector { padding:22px 26px; border-left:5px solid var(--blue); min-height:220px; }
+    .inspector .topline { color:var(--blue); font-size:.74rem; letter-spacing:.1em; font-weight:800; text-transform:uppercase; }
+    .inspector h2 { margin:6px 0 12px; }
+    .detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+    .detail-grid div { background:var(--soft); padding:15px 17px; border-radius:11px; }
+    .detail-grid p { font-size:.92rem; margin:0; }
+    .detail-grid .prompt { font-weight:700; margin-bottom:5px; }
+    .exercise, .guide { padding:25px; }
+    .scenarios { display:flex; gap:8px; flex-wrap:wrap; margin:15px 0; }
+    .scenario { padding:9px 13px; font-size:.89rem; font-weight:650; }
+    .scenario[aria-pressed="true"] { border-color:var(--blue); background:var(--blue-light); color:var(--button-active); }
+    .case-box { background:var(--soft); padding:18px; border-radius:13px; border:1px solid var(--line); }
+    .case-box p { color:var(--muted); }
+    .evidence { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:15px 0; }
+    .evidence div { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:12px; font-size:.88rem; }
+    .evidence b { display:block; margin-bottom:4px; }
+    .answer { background:var(--answer-bg); border:1px solid var(--answer-line); color:var(--answer-ink); border-radius:10px; padding:14px; margin-top:12px; }
+    .action { background:#245eea; color:#fff; border:0; border-radius:10px; padding:10px 16px; font-weight:700; }
+    .action:hover { background:var(--button-hover); }
+    .check-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:15px; }
+    .check { padding:14px; min-height:100px; }
+    .check b { display:block; color:var(--blue); margin-bottom:4px; }
+    .check span { color:var(--muted); font-size:.88rem; }
+    .note { color:var(--muted); font-size:.9rem; margin-top:16px; }
+    footer { border-top:1px solid var(--line); padding:23px 0 35px; color:var(--muted); font-size:.87rem; }
+    @media (max-width:900px) { .flow { grid-template-columns:1fr; } .node,.edge { min-height:auto; } .node { gap:7px; } .node code { margin-top:8px; } .edge { padding:10px; } .arrow { transform:rotate(90deg); } .return-flow { grid-template-columns:repeat(2,1fr); } .concepts,.check-grid { grid-template-columns:1fr 1fr; } .data-lane { grid-template-columns:1fr; gap:19px; } .info-step { min-height:auto; } .info-step:not(:last-child)::after { left:50%; top:calc(100% + 1px); transform:translateX(-50%) rotate(90deg); } .method-lane { grid-template-columns:repeat(2,1fr); } .method-step { min-height:110px; } }
+    @media (max-width:600px) { .wrap { width:min(100% - 24px,1200px); } header { padding:32px 0; } .intro,.surface,.exercise,.guide,.info-panel { padding:18px; } .concepts,.check-grid,.evidence,.detail-grid,.method-lane { grid-template-columns:1fr; } .method-step { min-height:auto; } .return-flow { grid-template-columns:1fr; } .return-step { min-height:auto; } }
+    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition:none!important; } }
+  </style>
+</head>
+<body>
+  <header><div class="wrap">
+    <div class="header-top">
+      <div class="eyebrow">ADA - Diagnostico de fallas</div>
+      <div class="theme-switch" role="group" aria-label="Tema visual">
+        <button type="button" data-theme-choice="auto" aria-label="Seguir tema del sistema" title="Sistema" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></button>
+        <button type="button" data-theme-choice="light" aria-label="Activar tema claro" title="Claro" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg></button>
+        <button type="button" data-theme-choice="dark" aria-label="Activar tema oscuro" title="Oscuro" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20.5 14.4A8.6 8.6 0 0 1 9.6 3.5 8.7 8.7 0 1 0 20.5 14.4Z"/></svg></button>
+      </div>
+    </div>
+    <h1>¿Dónde se corta la comunicación entre frontend y backend?</h1>
+    <p>Sigue una solicitud de inicio de sesión desde el clic del usuario hasta la respuesta en pantalla. Pulsa cualquier bloque o flecha para descubrir qué ocurre allí y cómo comprobar si funciona.</p>
+    <div class="header-meta"><span>Ejemplo: POST /api/login</span><span>Diagnóstico paso a paso</span><span>Sin servidor ni instalación</span></div>
+  </div></header>
+  <main class="wrap">
+    <section class="intro" aria-labelledby="intro-title">
+      <h2 id="intro-title">Antes de comenzar</h2>
+      <p>Una aplicación web tiene un <strong>frontend</strong>, que muestra la interfaz y responde a las acciones del usuario; un <strong>backend</strong>, que recibe solicitudes y aplica reglas; y, a menudo, una <strong>base de datos</strong>, que conserva información. El navegador y la API intercambian mensajes mediante HTTP. En este ejemplo, el usuario envía un formulario de acceso, el servidor busca su cuenta y devuelve una respuesta que el navegador debe interpretar.</p>
+      <p>Para localizar un error, recorre las etapas en orden y busca <strong>la primera evidencia que falta o es incorrecta</strong>. Un mismo síntoma, como “no puedo iniciar sesión”, puede tener causas en lugares diferentes. Este esquema representa el <em>flujo de información de una aplicación</em>; no es un DFD formal con notación de procesos, entidades y almacenes.</p>
+      <div class="concepts">
+        <div class="concept"><h3>Petición</h3><p>Mensaje del navegador al servidor: URL, método, cabeceras y, si corresponde, cuerpo.</p></div>
+        <div class="concept"><h3>Respuesta</h3><p>Mensaje de vuelta: código de estado, cabeceras y datos o descripción del error.</p></div>
+        <div class="concept"><h3>Evidencia</h3><p>Lo observable en Console, Network, registros del servidor y base de datos.</p></div>
+      </div>
+    </section>
+
+    <section class="infographic" aria-labelledby="infographic-title">
+      <div class="infographic-heading"><div><div class="tag">Infografía · del concepto al diagnóstico</div><h2 id="infographic-title">Visualiza el viaje de los datos</h2></div><p>Pulsa cualquier tarjeta para abrir su explicación.</p></div>
+      <div class="info-panel">
+        <div class="info-kicker">A · ¿Qué es un flujo de datos?</div>
+        <h3>Información que sale, se transforma y regresa</h3>
+        <p>Cada etapa recibe datos, hace algo con ellos y entrega un resultado a la siguiente. Las flechas indican <strong>dirección</strong>; las etiquetas indican <strong>qué viaja</strong>.</p>
+        <div class="data-lane" role="group" aria-label="Recorrido de los datos de un inicio de sesión">
+          <button class="info-step" type="button" data-id="frontend" aria-pressed="false"><span class="info-num">01 · Origen</span><strong>Usuario → navegador</strong><small>Correo y contraseña en el formulario</small></button>
+          <button class="info-step" type="button" data-id="request" aria-pressed="false"><span class="info-num">02 · Transporte</span><strong>Petición HTTP</strong><small>POST /api/login + cuerpo JSON</small></button>
+          <button class="info-step" type="button" data-id="backend" aria-pressed="false"><span class="info-num">03 · Proceso</span><strong>API ↔ base de datos</strong><small>Valida, consulta y decide</small></button>
+          <button class="info-step" type="button" data-id="response" aria-pressed="false"><span class="info-num">04 · Resultado</span><strong>Respuesta HTTP</strong><small>Estado + JSON de éxito o error</small></button>
+          <button class="info-step" type="button" data-id="render" aria-pressed="false"><span class="info-num">05 · Destino</span><strong>Pantalla actualizada</strong><small>Bienvenida o mensaje de error</small></button>
+        </div>
+        <div class="flow-key"><b>En el viaje:</b><span>datos de entrada</span><span>reglas y consulta</span><span>datos de salida</span></div>
+      </div>
+      <div class="info-panel method-panel">
+        <div class="info-kicker">B · ¿Cómo diagnosticar un corte?</div>
+        <h3>Observa una etapa por vez</h3>
+        <p>Compara lo que debería pasar con lo que realmente ves. La primera diferencia acota el problema.</p>
+        <div class="method-lane" role="group" aria-label="Pasos del diagnóstico">
+          <button class="method-step" type="button" data-method="reproduce" aria-pressed="false"><span class="method-num">1</span><strong>Reproduce</strong><small>Haz clic y observa el síntoma.</small></button>
+          <button class="method-step" type="button" data-method="observa" aria-pressed="false"><span class="method-num">2</span><strong>Observa</strong><small>Console + Network: ¿salió la solicitud?</small></button>
+          <button class="method-step" type="button" data-method="compara" aria-pressed="false"><span class="method-num">3</span><strong>Compara</strong><small>URL, método, datos, estado y logs.</small></button>
+          <button class="method-step" type="button" data-method="aisla" aria-pressed="false"><span class="method-num">4</span><strong>Aísla</strong><small>Ubica la primera etapa que falla.</small></button>
+          <button class="method-step" type="button" data-method="verifica" aria-pressed="false"><span class="method-num">5</span><strong>Corrige y verifica</strong><small>Repite el recorrido de extremo a extremo.</small></button>
+        </div>
+        <div class="method-rule"><strong>Ejemplo:</strong> el clic ocurre ✓ → Network muestra <code>404</code> → el servidor tiene otra ruta → corrige la URL del frontend y vuelve a probar.</div>
+      </div>
+    </section>
+
+    <section aria-labelledby="flow-title">
+      <div class="section-head"><h2 id="flow-title">1. Sigue el recorrido de ida y vuelta</h2><p>Todos los bloques son interactivos · también se pueden activar con Tab y Enter</p></div>
+      <div class="surface">
+        <div class="flow-label">Ida · navegador hacia los datos</div>
+        <div class="flow">
+          <button class="node selected" type="button" data-id="frontend" aria-pressed="true"><span class="tag">① Cliente</span><strong>Frontend</strong><small>Formulario, clic y función JavaScript</small><code>fetch('/api/login')</code></button>
+          <button class="edge" type="button" data-id="request" aria-pressed="false"><span class="arrow" aria-hidden="true">→</span><strong>Petición HTTP</strong><small>POST · JSON · headers</small></button>
+          <button class="node" type="button" data-id="backend" aria-pressed="false"><span class="tag">② Servidor</span><strong>Backend / API</strong><small>Ruta → validación → lógica</small><code>POST /api/login</code></button>
+          <button class="edge" type="button" data-id="query" aria-pressed="false"><span class="arrow" aria-hidden="true">↔</span><strong>Consulta</strong><small>Busca el usuario y verifica sus datos</small></button>
+          <button class="node" type="button" data-id="database" aria-pressed="false"><span class="tag">③ Datos</span><strong>Base de datos</strong><small>Tablas, registros y permisos</small><code>users WHERE email = ?</code></button>
+        </div>
+        <div class="flow-label" style="margin-top:25px">Vuelta · datos hacia la interfaz</div>
+        <div class="return-flow">
+          <button class="return-step" type="button" data-id="dbresult" aria-pressed="false"><span class="tag">④ Resultado</span><strong>Base de datos → backend</strong><small>Registro encontrado, ninguno o error</small></button>
+          <button class="return-step" type="button" data-id="response" aria-pressed="false"><span class="tag">⑤ Respuesta</span><strong>Backend → navegador</strong><small>Estado HTTP + JSON</small></button>
+          <button class="return-step" type="button" data-id="parse" aria-pressed="false"><span class="tag">⑥ Interpretación</span><strong>JavaScript lee la respuesta</strong><small>Comprueba estado y contenido</small></button>
+          <button class="return-step" type="button" data-id="render" aria-pressed="false"><span class="tag">⑦ Pantalla</span><strong>Interfaz se actualiza</strong><small>Acceso concedido o mensaje de error</small></button>
+        </div>
+        <p class="legend">Las flechas y las etapas de vuelta también tienen explicaciones. El ejemplo muestra un recorrido simplificado: una implementación real puede añadir proxy, caché o servicios externos.</p>
+      </div>
+    </section>
+
+    <section class="inspector" id="inspector" aria-live="polite" aria-atomic="true" aria-labelledby="detail-title">
+      <div class="topline">Ficha de la etapa seleccionada</div>
+      <h2 id="detail-title">Frontend</h2>
+      <div class="detail-grid"><div><p class="prompt">Qué es y qué hace</p><p id="detail-what"></p></div><div><p class="prompt">Cómo diagnosticarlo</p><p id="detail-test"></p></div></div>
+    </section>
+
+    <section class="exercise" aria-labelledby="case-title">
+      <h2 id="case-title">2. Practica con una avería</h2>
+      <p>Selecciona un escenario. Lee las evidencias e intenta identificar la primera etapa que falla antes de revelar el diagnóstico.</p>
+      <div class="scenarios" role="group" aria-label="Elegir escenario">
+        <button class="scenario" type="button" data-scenario="route" aria-pressed="true">Ruta equivocada · 404</button>
+        <button class="scenario" type="button" data-scenario="cors" aria-pressed="false">Bloqueo CORS</button>
+        <button class="scenario" type="button" data-scenario="db" aria-pressed="false">Falla la base de datos</button>
+        <button class="scenario" type="button" data-scenario="ui" aria-pressed="false">200, pero no cambia la pantalla</button>
+      </div>
+      <div class="case-box">
+        <h3 id="case-heading"></h3><p id="case-description"></p>
+        <div class="evidence" id="evidence"></div>
+        <button class="action" id="reveal" type="button" aria-expanded="false" aria-controls="answer">Revelar diagnóstico</button>
+        <div class="answer" id="answer" hidden></div>
+      </div>
+    </section>
+
+    <section class="guide" aria-labelledby="guide-title">
+      <h2 id="guide-title">3. Lista de comprobación</h2>
+      <p>Abre cada comprobación para ver una prueba concreta y una pista de interpretación.</p>
+      <div class="check-grid">
+        <button class="check" type="button" data-id="frontend"><b>① ¿Se ejecutó el clic?</b><span>Console y valores del formulario</span></button>
+        <button class="check" type="button" data-id="request"><b>② ¿Salió la petición?</b><span>Network: URL, método, cuerpo y cabeceras</span></button>
+        <button class="check" type="button" data-id="backend"><b>③ ¿La recibió la API?</b><span>Ruta, logs, validación y errores</span></button>
+        <button class="check" type="button" data-id="database"><b>④ ¿Funcionó la consulta?</b><span>Conexión, permisos y registros</span></button>
+        <button class="check" type="button" data-id="response"><b>⑤ ¿Qué respondió?</b><span>Estado, cabeceras y JSON real</span></button>
+        <button class="check" type="button" data-id="render"><b>⑥ ¿Se mostró el resultado?</b><span>JavaScript, estado y renderizado</span></button>
+      </div>
+      <p class="note"><strong>Atajo de laboratorio:</strong> abre las herramientas de desarrollo (F12), observa <em>Console</em> y <em>Network</em>, reproduce el error y compara sus datos con los registros del servidor. Un 404 indica que esa URL no encontró un recurso; un 405 puede señalar un método no permitido; un 500 indica un error del servidor. El código por sí solo no demuestra la causa exacta.</p>
+    </section>
+  </main>
+  <footer><div class="wrap">ADA · Diagnóstico de comunicación frontend, API y base de datos</div></footer>
+  <script>
+    (() => {
+      'use strict';
+      const themeButtons=document.querySelectorAll('[data-theme-choice]');
+      const systemTheme=window.matchMedia('(prefers-color-scheme: dark)');
+      let themeChoice='auto';
+      try { const saved=localStorage.getItem('diagnostico-tema'); if(saved==='light' || saved==='dark') themeChoice=saved; } catch {}
+      function applyTheme() {
+        document.documentElement.dataset.theme=themeChoice==='auto' ? (systemTheme.matches?'dark':'light') : themeChoice;
+        themeButtons.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.themeChoice===themeChoice)));
+      }
+      themeButtons.forEach(button=>button.addEventListener('click',()=>{
+        themeChoice=button.dataset.themeChoice;
+        try { if(themeChoice==='auto') localStorage.removeItem('diagnostico-tema'); else localStorage.setItem('diagnostico-tema',themeChoice); } catch {}
+        applyTheme();
+      }));
+      systemTheme.addEventListener('change',()=>{if(themeChoice==='auto') applyTheme();});
+      applyTheme();
+      const info = {
+        frontend: {title:'Frontend',what:'Es el código que corre en el navegador. Recoge los datos del formulario y, al pulsar el botón, llama a fetch() para pedir al servidor que procese el acceso.',test:'En Console, coloca un console.log() antes de fetch(). Comprueba que se ejecuta una sola vez, que no hay excepciones y que los datos del formulario tienen los valores esperados. Si no se ejecuta, revisa el evento y el JavaScript.'},
+        request: {title:'Petición HTTP',what:'Es el mensaje que viaja del navegador a la API. POST indica la acción; /api/login es la ruta; Content-Type: application/json describe el cuerpo JSON. Los headers son metadatos de la solicitud.',test:'En DevTools → Network, filtra Fetch/XHR y comprueba si aparece POST /api/login. Abre Headers y Payload para revisar dirección completa, método y datos. Si no aparece, vuelve al frontend. Si el navegador bloquea CORS, inspecciona también Console y las cabeceras de respuesta; la petición puede haber llegado al servidor.'},
+        backend: {title:'Backend / API',what:'Es el programa del servidor. La ruta elige un controlador, que valida la entrada, aplica reglas de autenticación y decide si necesita consultar los datos.',test:'Revisa los logs del servidor y confirma qué ruta y método recibió. Compara la URL solicitada con la ruta registrada. En el caso de práctica, el frontend pide /api/login pero el servidor define /api/auth/login: ahí surge el 404.'},
+        query: {title:'Interacción con la base de datos',what:'El backend envía una consulta parametrizada para localizar el usuario por correo y recibe un resultado. La contraseña se verifica con un hash seguro en el backend; no se guarda ni compara en texto plano en SQL.',test:'Comprueba si se inició la consulta y si hay errores de conexión, timeout o permisos en los logs. Examina el esquema y parámetros de forma segura. No imprimas contraseñas ni tokens en los registros.'},
+        database: {title:'Base de datos',what:'Es el sistema que conserva los registros, por ejemplo usuarios. Una consulta puede devolver una fila, ninguna fila o un error. Una fila encontrada no significa todavía que la contraseña sea válida.',test:'Comprueba que el servicio está disponible, que el usuario de aplicación tiene permisos, que la tabla existe y que los datos esperados están presentes. Distingue “no hay registro” de “falló la conexión”.'},
+        dbresult: {title:'Resultado de la consulta',what:'La base de datos devuelve al backend los datos consultados o informa un fallo. El backend verifica las credenciales y decide si corresponde responder con éxito o rechazo.',test:'En los logs del backend, identifica si la consulta terminó y qué rama ejecutó la lógica. No muestres datos sensibles; registra identificadores de correlación y tipos de error cuando sea posible.'},
+        response: {title:'Respuesta HTTP',what:'La API responde con un estado y un cuerpo. Por ejemplo, 200 y datos de sesión cuando el acceso es válido; 401 cuando las credenciales no lo son. Una API puede devolver 200 con un formato distinto del que espera el frontend.',test:'En Network → Response y Headers, revisa estado, Content-Type y JSON real. Un 404 exige revisar la ruta; un 500 exige consultar logs. Para CORS, verifica la política y cabeceras del servidor; el bloqueo del navegador no prueba que la API no haya recibido la petición.'},
+        parse: {title:'Interpretación en JavaScript',what:'El frontend lee la respuesta con await response.json() cuando el contenido realmente es JSON. También debe comprobar response.ok y tratar errores y respuestas inesperadas.',test:'Si Network muestra datos correctos, revisa Console. Confirma que el código espera la promesa, maneja respuestas no exitosas y consulta los nombres reales de las propiedades del JSON.'},
+        render: {title:'Actualización de la interfaz',what:'Tras interpretar la respuesta, la aplicación cambia su estado y muestra una pantalla, un mensaje de error o una sesión iniciada. Un 200 no actualiza la interfaz por sí solo.',test:'Si la respuesta es correcta pero la pantalla no cambia, revisa errores JS, nombres de propiedades, actualización del estado y condiciones de renderizado. Prueba con el dato real recibido, no con el esperado.'}
+      };
+      const methodInfo = {
+        reproduce: {title:'1. Reproduce el síntoma',what:'Haz exactamente lo que hace la persona cuando aparece el problema. Anota el resultado esperado y el resultado real para que la prueba se pueda repetir.',test:'Por ejemplo, envía el formulario una vez: debería abrirse la sesión, pero aparece “No se pudo iniciar sesión”. Anota cuándo ocurre y si sucede siempre.'},
+        observa: {title:'2. Recoge evidencias',what:'Mira lo que realmente hizo la aplicación: Console muestra errores de JavaScript; Network muestra solicitudes, estados, cabeceras y respuestas. Los logs del servidor muestran qué recibió la API.',test:'Abre DevTools antes de repetir el clic. Comprueba si aparece la petición y guarda la URL, el método, el estado y el mensaje de error sin copiar contraseñas ni tokens.'},
+        compara: {title:'3. Compara esperado y observado',what:'En cada punto del recorrido pregunta “¿qué debería entrar y salir?” y compáralo con la evidencia. Diferencias de ruta, método, formato o nombres de propiedades ayudan a acotar la causa.',test:'Ejemplo: Network muestra POST /api/login, pero el servidor registra POST /api/auth/login. La discrepancia de URL explica el 404.'},
+        aisla: {title:'4. Aísla la primera etapa incorrecta',what:'Avanza desde el clic hasta los datos y de regreso. La primera etapa sin evidencia o con una salida distinta de la esperada indica dónde investigar primero. Puede estar en frontend, red, backend, datos o renderizado.',test:'Si no hay petición en Network, inspecciona el evento del frontend. Si la petición llega y falla la consulta, inspecciona los logs y la conexión con la base de datos.'},
+        verifica: {title:'5. Corrige y verifica',what:'Cambia la causa identificada y repite la misma prueba. Comprueba también que el resultado llega hasta la pantalla, no solo que desapareció un error intermedio.',test:'Tras corregir la URL, confirma una respuesta apropiada en Network, ausencia de errores nuevos en Console y el mensaje correcto en la interfaz.'}
+      };
+      const cases = {
+        route: {heading:'El botón responde, pero aparece “No se pudo iniciar sesión”',description:'Hay que descubrir si la falla está antes de la red, en la ruta o después de la respuesta.',evidence:[['Frontend','El evento se ejecuta ✓'],['Network','POST /api/login → 404'],['Backend','Ruta registrada: POST /api/auth/login'],['Interfaz','Muestra un mensaje genérico']],answer:'Primera etapa incorrecta: petición HTTP / ruta de la API. El frontend llama a /api/login, pero el backend ofrece /api/auth/login. Corrige la URL del fetch y repite la prueba. El 404 es la evidencia; la comparación de rutas permite identificar la causa.'},
+        cors: {heading:'La petición aparece en Network, pero JavaScript no puede leer la respuesta',description:'El frontend y la API están en orígenes distintos. El navegador aplica la política de origen cruzado.',evidence:[['Frontend','fetch() se ejecuta ✓'],['Network','Hay solicitud o preflight OPTIONS'],['Console','Error relacionado con CORS'],['Backend','Puede haber recibido la solicitud']],answer:'Primera etapa problemática: intercambio HTTP entre navegador y API. Comprueba la respuesta al preflight OPTIONS si existe, Access-Control-Allow-Origin, métodos y cabeceras permitidas, y credenciales si se usan. Configura CORS en el servidor para el origen correcto. CORS es una restricción del navegador: algunos requests sí llegan a la API aunque JavaScript no pueda leer la respuesta.'},
+        db: {heading:'El servidor recibe la ruta correcta, pero responde 500',description:'La petición sí entra en el controlador; los registros muestran un error al acceder a los datos.',evidence:[['Frontend','Evento ejecutado ✓'],['Network','POST /api/login → 500'],['Backend','Ruta y validación correctas ✓'],['Logs','Timeout de conexión a la BD']],answer:'Primera etapa que falla: conexión o consulta a la base de datos. Verifica disponibilidad, dirección y puerto, credenciales, permisos y timeout. El 500 es un síntoma del error interno; los logs localizan la falla sin necesidad de adivinar.'},
+        ui: {heading:'La API devuelve 200, pero la pantalla permanece igual',description:'La respuesta incluye datos correctos y ya llegó al navegador.',evidence:[['Frontend','Clic y petición ✓'],['Network','200 · JSON correcto ✓'],['Console','TypeError: user is undefined'],['Interfaz','Estado visual sin cambios']],answer:'Primera etapa que falla: interpretación o renderizado en el frontend. Compara la estructura real del JSON con la propiedad que lee el código, corrige el acceso y confirma que actualiza el estado de la interfaz. Un 200 solo confirma que hubo una respuesta exitosa a nivel HTTP.'}
+      };
+      const inspector=document.getElementById('inspector');
+      function select(id,scroll) {
+        const item=info[id] || methodInfo[id]; if(!item) return;
+        document.getElementById('detail-title').textContent=item.title;
+        document.getElementById('detail-what').textContent=item.what;
+        document.getElementById('detail-test').textContent=item.test;
+        document.querySelectorAll('.node,.edge,.return-step,.info-step,.method-step').forEach(el=>{const active=(el.dataset.id || el.dataset.method)===id; el.classList.toggle('selected',active); el.setAttribute('aria-pressed',String(active));});
+        if(scroll) inspector.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'center'});
+      }
+      document.querySelectorAll('[data-id]').forEach(btn=>btn.addEventListener('click',()=>select(btn.dataset.id,true)));
+      document.querySelectorAll('[data-method]').forEach(btn=>btn.addEventListener('click',()=>select(btn.dataset.method,true)));
+      function scenario(id) {
+        const item=cases[id]; if(!item) return;
+        document.querySelectorAll('.scenario').forEach(btn=>btn.setAttribute('aria-pressed',String(btn.dataset.scenario===id)));
+        document.getElementById('case-heading').textContent=item.heading;
+        document.getElementById('case-description').textContent=item.description;
+        const evidence=document.getElementById('evidence'); evidence.replaceChildren();
+        item.evidence.forEach(([heading,detail])=>{const box=document.createElement('div'); const bold=document.createElement('b');bold.textContent=heading;box.append(bold,document.createTextNode(detail));evidence.append(box);});
+        document.getElementById('answer').textContent=item.answer;
+        document.getElementById('answer').hidden=true;
+        const reveal=document.getElementById('reveal'); reveal.setAttribute('aria-expanded','false'); reveal.textContent='Revelar diagnóstico';
+      }
+      document.querySelectorAll('.scenario').forEach(btn=>btn.addEventListener('click',()=>scenario(btn.dataset.scenario)));
+      document.getElementById('reveal').addEventListener('click',event=>{const box=document.getElementById('answer');box.hidden=!box.hidden;event.currentTarget.setAttribute('aria-expanded',String(!box.hidden));event.currentTarget.textContent=box.hidden?'Revelar diagnóstico':'Ocultar diagnóstico';});
+      select('frontend',false);scenario('route');
+    })();
+  </script>
+</body>
+</html>
