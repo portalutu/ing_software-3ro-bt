@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "nombreUsuario": "arrr",
+    "passwordHash": "d3ad9315b7be5dd53b31a273b3b3aba5defe700808305aa16a3062b76658a791",
+    "nombreCompleto": "Antonio Romualdo Rogelio Roldán",
+    "email": "arrr@muchateta.demo",
+    "rol": "ADMINISTRADOR",
+    "activo": true
+  },
+  {
+    "id": 2,
+    "nombreUsuario": "admin",
+    "passwordHash": "d3ad9315b7be5dd53b31a273b3b3aba5defe700808305aa16a3062b76658a791",
+    "nombreCompleto": "Administración del establecimiento",
+    "email": "administracion@muchateta.demo",
+    "rol": "ADMINISTRADOR",
+    "activo": true
+  },
+  {
+    "id": 3,
+    "nombreUsuario": "caca",
+    "passwordHash": "d3ad9315b7be5dd53b31a273b3b3aba5defe700808305aa16a3062b76658a791",
+    "nombreCompleto": "Carlos Andrés Cáceres Alvez",
+    "email": "caca@muchateta.demo",
+    "rol": "ENCARGADO",
+    "activo": true
+  },
+  {
+    "id": 4,
+    "nombreUsuario": "leechera",
+    "passwordHash": "d3ad9315b7be5dd53b31a273b3b3aba5defe700808305aa16a3062b76658a791",
+    "nombreCompleto": "Lucía Esperanza Echera",
+    "email": "leechera@muchateta.demo",
+    "rol": "OPERARIO",
+    "activo": true
+  },
+  {
+    "id": 5,
+    "nombreUsuario": "operario2",
+    "passwordHash": "d3ad9315b7be5dd53b31a273b3b3aba5defe700808305aa16a3062b76658a791",
+    "nombreCompleto": "Martín Pereira",
+    "email": "operario2@muchateta.demo",
+    "rol": "OPERARIO",
+    "activo": true
+  },
+  {
+    "id": 6,
+    "nombreUsuario": "veterinario",
+    "passwordHash": "d3ad9315b7be5dd53b31a273b3b3aba5defe700808305aa16a3062b76658a791",
+    "nombreCompleto": "Dra. Valentina Silva",
+    "email": "veterinaria@muchateta.demo",
+    "rol": "VETERINARIO",
+    "activo": true
+  }
+]

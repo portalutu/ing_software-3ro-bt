@@ -17,10 +17,11 @@ La portada es estática, adaptable a celulares y no requiere compilación. Inclu
 5. [Historias de usuario](Teoricos/user-stories.md)
 6. [Backlog de producto](Teoricos/backlog.md)
 7. [Planificación del sprint](Teoricos/sprint-planning.md)
-8. [Kit completo de documentación](documentos/Project_Management_Templates_full.md)
+8. [Cierre de un proyecto](Teoricos/cierre-de-proyecto.md)
+9. [Kit completo de documentación](documentos/Project_Management_Templates_full.md)
 
 ```text
-necesidad → entrevista → requerimientos → modelado → historias → backlog → sprint → documentación
+necesidad → entrevista → requerimientos → modelado → historias → backlog → sprint → entrega → cierre
 ```
 
 ## Organización
@@ -46,6 +47,7 @@ necesidad → entrevista → requerimientos → modelado → historias → backl
 - [Backlog](Teoricos/backlog.md)
 - [Sprint Planning](Teoricos/sprint-planning.md)
 - [Eventos de Scrum](Teoricos/scrum-events.md)
+- [Cierre de un proyecto](Teoricos/cierre-de-proyecto.md)
 - [Especificación de requerimientos y UML](Teoricos/ADA.md)
 
 ### Prácticos
@@ -62,6 +64,7 @@ necesidad → entrevista → requerimientos → modelado → historias → backl
 - [Base de datos MySQL](Practicos/ada-tambotrace-mysql.md)
 - [Entorno Docker](Practicos/ada-tambotrace-docker.md)
 - [Project Charter](Practicos/ada-tambotrace-project-charter.md)
+- [Demo funcional de TamboTrace](tambotrace/) — aplicación HTML/CSS/JS con persistencia en archivos JSON.
 
 ### Recursos y evaluación
 

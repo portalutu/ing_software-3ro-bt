@@ -1,0 +1,8 @@
+[
+  { "id": 1, "entidad": "Ordeñe", "entidadId": 1, "accion": "Alta de ordeñe", "detalle": "2026-10-18 MANANA; 6 vacas incluidas", "fechaHora": "2026-10-18T08:12:00.000Z", "usuarioId": 4, "usuarioNombre": "Lucía Esperanza Echera" },
+  { "id": 2, "entidad": "Lote", "entidadId": 1, "accion": "Creación de lote", "detalle": "LOT-20261018-001 generado desde ordeñe #1", "fechaHora": "2026-10-18T08:35:00.000Z", "usuarioId": 3, "usuarioNombre": "Carlos Andrés Cáceres Alvez" },
+  { "id": 3, "entidad": "Lote", "entidadId": 1, "accion": "Carga de calidad", "detalle": "Estado actualizado a COMPLETO", "fechaHora": "2026-10-18T16:42:00.000Z", "usuarioId": 2, "usuarioNombre": "Administración del establecimiento" },
+  { "id": 4, "entidad": "Lote", "entidadId": 1, "accion": "Cierre de lote", "detalle": "LOT-20261018-001 quedó bloqueado para edición", "fechaHora": "2026-10-18T17:20:00.000Z", "usuarioId": 3, "usuarioNombre": "Carlos Andrés Cáceres Alvez" },
+  { "id": 5, "entidad": "Ordeñe", "entidadId": 2, "accion": "Alta de ordeñe", "detalle": "2026-10-19 TARDE; 5 vacas incluidas", "fechaHora": "2026-10-19T20:05:00.000Z", "usuarioId": 5, "usuarioNombre": "Martín Pereira" },
+  { "id": 6, "entidad": "Lote", "entidadId": 2, "accion": "Creación de lote", "detalle": "LOT-20261019-002 generado desde ordeñe #2", "fechaHora": "2026-10-19T20:24:00.000Z", "usuarioId": 3, "usuarioNombre": "Carlos Andrés Cáceres Alvez" }
+]

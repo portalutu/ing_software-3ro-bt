@@ -1,0 +1,37 @@
+[
+  {
+    "id": 1,
+    "fecha": "2026-10-18",
+    "turno": "MANANA",
+    "tanque": "T1",
+    "responsableId": 4,
+    "observaciones": "Ordeñe normal. Se excluyó el animal en tratamiento.",
+    "participaciones": [
+      { "vacaId": 1, "participo": true, "motivoExclusion": "" },
+      { "vacaId": 2, "participo": true, "motivoExclusion": "" },
+      { "vacaId": 3, "participo": true, "motivoExclusion": "" },
+      { "vacaId": 4, "participo": false, "motivoExclusion": "Tratamiento por mastitis" },
+      { "vacaId": 5, "participo": true, "motivoExclusion": "" },
+      { "vacaId": 7, "participo": true, "motivoExclusion": "" },
+      { "vacaId": 8, "participo": true, "motivoExclusion": "" }
+    ],
+    "creadoEn": "2026-10-18T08:12:00.000Z"
+  },
+  {
+    "id": 2,
+    "fecha": "2026-10-19",
+    "turno": "TARDE",
+    "tanque": "T2",
+    "responsableId": 5,
+    "observaciones": "Carga realizada desde la sala de ordeñe.",
+    "participaciones": [
+      { "vacaId": 1, "participo": true, "motivoExclusion": "" },
+      { "vacaId": 2, "participo": true, "motivoExclusion": "" },
+      { "vacaId": 3, "participo": true, "motivoExclusion": "" },
+      { "vacaId": 5, "participo": true, "motivoExclusion": "" },
+      { "vacaId": 7, "participo": true, "motivoExclusion": "" },
+      { "vacaId": 8, "participo": false, "motivoExclusion": "Control preventivo de pezuña" }
+    ],
+    "creadoEn": "2026-10-19T20:05:00.000Z"
+  }
+]

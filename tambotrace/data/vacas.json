@@ -1,0 +1,11 @@
+[
+  { "id": 1, "caravana": "UY-0201", "nombre": "Manchita", "raza": "Holando", "fechaNacimiento": "2021-03-14", "estado": "EN_PRODUCCION", "observaciones": "Alta producción; dócil en sala." },
+  { "id": 2, "caravana": "UY-0208", "nombre": "Nube", "raza": "Holando", "fechaNacimiento": "2020-09-02", "estado": "EN_PRODUCCION", "observaciones": "Sin observaciones generales." },
+  { "id": 3, "caravana": "UY-0215", "nombre": "Pinta", "raza": "Holando", "fechaNacimiento": "2022-01-27", "estado": "EN_PRODUCCION", "observaciones": "Primer ciclo completo." },
+  { "id": 4, "caravana": "UY-0221", "nombre": "Mora", "raza": "Holando", "fechaNacimiento": "2019-11-11", "estado": "TRATAMIENTO", "observaciones": "Separar del tanque hasta alta veterinaria." },
+  { "id": 5, "caravana": "UY-0227", "nombre": "Luna", "raza": "Holando", "fechaNacimiento": "2021-06-06", "estado": "EN_PRODUCCION", "observaciones": "Control de ubre normal." },
+  { "id": 6, "caravana": "UY-0234", "nombre": "Dalia", "raza": "Holando", "fechaNacimiento": "2018-08-19", "estado": "SECADO", "observaciones": "Secado programado." },
+  { "id": 7, "caravana": "UY-0240", "nombre": "Oreo", "raza": "Holando", "fechaNacimiento": "2022-04-08", "estado": "EN_PRODUCCION", "observaciones": "Sin observaciones generales." },
+  { "id": 8, "caravana": "UY-0248", "nombre": "Bruma", "raza": "Holando", "fechaNacimiento": "2020-12-03", "estado": "EN_PRODUCCION", "observaciones": "Revisar pezuñas en próximo control." },
+  { "id": 9, "caravana": "UY-0192", "nombre": "Perla", "raza": "Holando", "fechaNacimiento": "2017-02-18", "estado": "BAJA", "observaciones": "Baja administrativa; se conserva por trazabilidad histórica." }
+]

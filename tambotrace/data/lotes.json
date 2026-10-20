@@ -1,0 +1,63 @@
+[
+  {
+    "id": 1,
+    "codigo": "LOT-20261018-001",
+    "ordeneId": 1,
+    "fechaCreacion": "2026-10-18T08:35:00.000Z",
+    "tanque": "T1",
+    "litrosEstimados": 2180,
+    "estado": "CERRADO",
+    "fechaCierre": "2026-10-18T17:20:00.000Z",
+    "creadoPorId": 3,
+    "cerradoPorId": 3,
+    "participaciones": [
+      { "vacaId": 1, "tipo": "INCLUIDA", "motivoExclusion": "" },
+      { "vacaId": 2, "tipo": "INCLUIDA", "motivoExclusion": "" },
+      { "vacaId": 3, "tipo": "INCLUIDA", "motivoExclusion": "" },
+      { "vacaId": 4, "tipo": "EXCLUIDA", "motivoExclusion": "Tratamiento por mastitis" },
+      { "vacaId": 5, "tipo": "INCLUIDA", "motivoExclusion": "" },
+      { "vacaId": 7, "tipo": "INCLUIDA", "motivoExclusion": "" },
+      { "vacaId": 8, "tipo": "INCLUIDA", "motivoExclusion": "" }
+    ],
+    "calidad": {
+      "temperatura": 3.8,
+      "grasa": 3.72,
+      "proteina": 3.29,
+      "celulasSomaticas": 178000,
+      "resultadoAntibioticos": "NEGATIVO",
+      "observaciones": "Muestra aceptada. Lote apto para envío.",
+      "fechaCarga": "2026-10-18T16:42:00.000Z",
+      "cargadoPorId": 2
+    }
+  },
+  {
+    "id": 2,
+    "codigo": "LOT-20261019-002",
+    "ordeneId": 2,
+    "fechaCreacion": "2026-10-19T20:24:00.000Z",
+    "tanque": "T2",
+    "litrosEstimados": 1945,
+    "estado": "PENDIENTE_ANALISIS",
+    "fechaCierre": null,
+    "creadoPorId": 3,
+    "cerradoPorId": null,
+    "participaciones": [
+      { "vacaId": 1, "tipo": "INCLUIDA", "motivoExclusion": "" },
+      { "vacaId": 2, "tipo": "INCLUIDA", "motivoExclusion": "" },
+      { "vacaId": 3, "tipo": "INCLUIDA", "motivoExclusion": "" },
+      { "vacaId": 5, "tipo": "INCLUIDA", "motivoExclusion": "" },
+      { "vacaId": 7, "tipo": "INCLUIDA", "motivoExclusion": "" },
+      { "vacaId": 8, "tipo": "EXCLUIDA", "motivoExclusion": "Control preventivo de pezuña" }
+    ],
+    "calidad": {
+      "temperatura": null,
+      "grasa": null,
+      "proteina": null,
+      "celulasSomaticas": null,
+      "resultadoAntibioticos": "",
+      "observaciones": "Esperando resultados del laboratorio.",
+      "fechaCarga": null,
+      "cargadoPorId": null
+    }
+  }
+]

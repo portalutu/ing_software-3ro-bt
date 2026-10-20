@@ -1,0 +1,4 @@
+[
+  { "id": 1, "vacaId": 4, "fecha": "2026-10-17", "descripcion": "Tratamiento por mastitis. No incluir en ordeñes hasta nuevo control.", "usuarioId": 6 },
+  { "id": 2, "vacaId": 8, "fecha": "2026-10-12", "descripcion": "Control preventivo: sensibilidad leve en pezuña posterior derecha.", "usuarioId": 6 }
+]

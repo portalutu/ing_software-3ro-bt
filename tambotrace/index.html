@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Demo educativa de TamboTrace: trazabilidad lechera basada en la documentación del proyecto.">
+  <meta name="theme-color" content="#0a0a0a">
+  <title>TamboTrace · Demo educativa</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#mainContent">Saltar al contenido</a>
+
+  <section class="login-screen" id="loginScreen" aria-labelledby="loginTitle">
+    <div class="login-spots" aria-hidden="true"></div>
+    <article class="login-card">
+      <div class="brand brand--login">
+        <span class="brand-mark" aria-hidden="true">TT</span>
+        <div><strong>TamboTrace</strong><small>trazabilidad que se puede demostrar</small></div>
+      </div>
+      <p class="eyebrow">Demo educativa · Estancia “MuchaTeta”</p>
+      <h1 id="loginTitle">Del requerimiento<br>al dato verificable.</h1>
+      <p class="login-copy">Iniciá sesión para recorrer el sistema construido a partir del Project Charter, los requerimientos y las historias de usuario del caso.</p>
+
+      <form id="loginForm" class="stack-form">
+        <label>Usuario<input name="username" autocomplete="username" value="caca" required></label>
+        <label>Contraseña<input name="password" type="password" autocomplete="current-password" value="demo123" required></label>
+        <button class="button button--primary button--wide" type="submit">Ingresar a la demo</button>
+      </form>
+
+      <div class="demo-access">
+        <strong>Accesos de prueba</strong>
+        <p><code>arrr</code>, <code>admin</code>, <code>caca</code>, <code>leechera</code>, <code>operario2</code> o <code>veterinario</code></p>
+        <p>Contraseña común: <code>demo123</code></p>
+      </div>
+
+      <button class="button button--ghost button--wide" id="connectFromLogin" type="button">Elegir carpeta de archivos JSON</button>
+      <p class="storage-help" id="loginStorageHelp">Podés explorar los datos incluidos en modo lectura. Para guardar cambios, elegí la carpeta <code>tambotrace/data</code>.</p>
+      <p class="form-error" id="loginError" role="alert"></p>
+    </article>
+  </section>
+
+  <div class="app-shell" id="appShell" hidden>
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">TT</span>
+        <div><strong>TamboTrace</strong><small>Estancia “MuchaTeta”</small></div>
+      </div>
+
+      <nav class="nav" aria-label="Secciones principales">
+        <button class="nav-item is-active" data-view="dashboard" type="button"><span aria-hidden="true">⌂</span>Resumen</button>
+        <button class="nav-item" data-view="vacas" data-roles="ADMINISTRADOR,ENCARGADO,OPERARIO,VETERINARIO" type="button"><span aria-hidden="true">◉</span>Vacas</button>
+        <button class="nav-item" data-view="ordenes" data-roles="ADMINISTRADOR,ENCARGADO,OPERARIO" type="button"><span aria-hidden="true">◫</span>Ordeñes</button>
+        <button class="nav-item" data-view="lotes" data-roles="ADMINISTRADOR,ENCARGADO" type="button"><span aria-hidden="true">▣</span>Lotes</button>
+        <button class="nav-item" data-view="trazabilidad" data-roles="ADMINISTRADOR,ENCARGADO,OPERARIO,VETERINARIO" type="button"><span aria-hidden="true">↳</span>Trazabilidad</button>
+        <button class="nav-item" data-view="usuarios" data-roles="ADMINISTRADOR" type="button"><span aria-hidden="true">♙</span>Usuarios</button>
+        <button class="nav-item" data-view="auditoria" data-roles="ADMINISTRADOR" type="button"><span aria-hidden="true">≡</span>Auditoría</button>
+        <button class="nav-item" data-view="documentacion" type="button"><span aria-hidden="true">◇</span>Documentación</button>
+      </nav>
+
+      <div class="sidebar-note">
+        <span>Objetivo del sistema</span>
+        <p>Reconstruir de forma confiable de qué animales provino cada lote.</p>
+      </div>
+    </aside>
+
+    <div class="app-column">
+      <header class="topbar">
+        <button class="icon-button menu-button" id="menuButton" type="button" aria-label="Abrir menú" aria-expanded="false">☰</button>
+        <div class="storage-status">
+          <span class="status-dot" id="storageDot" aria-hidden="true"></span>
+          <div><strong id="storageTitle">Datos de demostración</strong><small id="storageSubtitle">Solo lectura · conectá la carpeta data para guardar</small></div>
+        </div>
+        <div class="topbar-actions">
+          <button class="button button--small" id="connectFolder" type="button">Conectar JSON</button>
+          <button class="user-menu" id="userMenu" type="button" aria-label="Información del usuario actual">
+            <span class="avatar" id="userAvatar">CA</span>
+            <span><strong id="userName">Usuario</strong><small id="userRole">ROL</small></span>
+          </button>
+          <button class="icon-button" id="logoutButton" type="button" aria-label="Cerrar sesión">↪</button>
+        </div>
+      </header>
+
+      <main class="main" id="mainContent" tabindex="-1">
+        <section class="view" id="view-dashboard"></section>
+        <section class="view" id="view-vacas" hidden></section>
+        <section class="view" id="view-ordenes" hidden></section>
+        <section class="view" id="view-lotes" hidden></section>
+        <section class="view" id="view-trazabilidad" hidden></section>
+        <section class="view" id="view-usuarios" hidden></section>
+        <section class="view" id="view-auditoria" hidden></section>
+        <section class="view" id="view-documentacion" hidden></section>
+      </main>
+    </div>
+  </div>
+
+  <div class="sidebar-scrim" id="sidebarScrim" hidden></div>
+  <dialog class="dialog" id="appDialog" aria-labelledby="dialogTitle">
+    <form method="dialog" class="dialog-frame">
+      <header><div><p class="eyebrow" id="dialogEyebrow">TamboTrace</p><h2 id="dialogTitle">Formulario</h2></div><button class="icon-button" value="cancel" aria-label="Cerrar">×</button></header>
+      <div class="dialog-body" id="dialogBody"></div>
+      <footer id="dialogFooter"></footer>
+    </form>
+  </dialog>
+
+  <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
+  <script src="app.js" defer></script>
+</body>
+</html>

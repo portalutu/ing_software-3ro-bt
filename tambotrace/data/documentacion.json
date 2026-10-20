@@ -1,0 +1,21 @@
+{
+  "trazabilidad": [
+    { "epica": "EP1", "modulo": "Usuarios y seguridad", "decision": "Autenticación, usuarios activos y permisos por rol mantienen control sobre quién puede consultar o modificar.", "requerimientos": ["RF1", "RF2", "RNF4", "RNF5"], "historias": ["HU1", "HU2"] },
+    { "epica": "EP2", "modulo": "Gestión de animales", "decision": "La caravana es el identificador principal y el estado determina si la vaca puede agregarse automáticamente a un ordeñe.", "requerimientos": ["RF3", "RF4", "RF13"], "historias": ["HU3", "HU4", "HU5", "HU15"] },
+    { "epica": "EP3", "modulo": "Registro de ordeñes", "decision": "Se registra fecha, turno, tanque, responsable y participación; toda exclusión necesita un motivo.", "requerimientos": ["RF5", "RF6", "RF7", "RNF2"], "historias": ["HU6", "HU7", "HU8", "HU19"] },
+    { "epica": "EP4", "modulo": "Gestión de lotes", "decision": "El lote nace desde un ordeñe y conserva un snapshot de animales para que su historia no cambie después.", "requerimientos": ["RF8", "RF11"], "historias": ["HU9", "HU12", "HU20", "HU21"] },
+    { "epica": "EP5", "modulo": "Calidad", "decision": "Los datos de laboratorio pueden llegar después; el estado del lote comunica si están completos.", "requerimientos": ["RF9", "RF10"], "historias": ["HU10", "HU11"] },
+    { "epica": "EP6", "modulo": "Trazabilidad y reportes", "decision": "La consulta combina todas las entidades y permite imprimir o exportar evidencia de un lote.", "requerimientos": ["RF12", "RF14", "RNF11"], "historias": ["HU13", "HU14"] },
+    { "epica": "EP7", "modulo": "Auditoría", "decision": "Los cambios críticos guardan usuario y momento para reconstruir responsabilidades.", "requerimientos": ["RF15", "RNF6", "RNF7"], "historias": ["HU16", "HU17"] },
+    { "epica": "EP8", "modulo": "Capacitación y cierre", "decision": "La guía, los códigos visibles y este recorrido convierten la demo en evidencia de lo acordado.", "requerimientos": ["ALCANCE", "ENTREGA"], "historias": ["HU18"] }
+  ],
+  "archivos": [
+    { "nombre": "usuarios.json", "proposito": "Credenciales con hash, roles y estado de acceso.", "origen": "EP1" },
+    { "nombre": "vacas.json", "proposito": "Identificación, estado productivo y observaciones generales.", "origen": "EP2" },
+    { "nombre": "observaciones_sanitarias.json", "proposito": "Historial veterinario separado y con autor.", "origen": "HU15" },
+    { "nombre": "ordenes.json", "proposito": "Turno, tanque, responsable, incluidos y excluidos.", "origen": "EP3" },
+    { "nombre": "lotes.json", "proposito": "Snapshot de participación, calidad, estados y cierre.", "origen": "EP4–EP6" },
+    { "nombre": "auditoria.json", "proposito": "Fecha, usuario y detalle de los cambios críticos.", "origen": "EP7" },
+    { "nombre": "documentacion.json", "proposito": "Matriz que relaciona módulos con RF, RNF, HU y épicas.", "origen": "Trazabilidad" }
+  ]
+}
